@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="welcome">
+      <p>Signed in successfully</p>
+    </div>
+    <div class="container">
+      <div class="project-modal-container">
+        <div class="projects-head"></div>
+
+        <div class="project-container">
+          <!-- <div class="project">
+            <br />
+            <div class="description">
+              <p>
+                Create a full stack application that accepts and assigns
+                projects to registered users
+              </p>
+              <p><b>Complete by 19/08/2022</b></p>
+            </div>
+          </div>
+
+          <div class="project"></div>
+          <div class="project"></div>
+          <div class="project"></div> -->
+        </div>
+
+        <div class="user-modal">
+          <div class="inner-modal">
+            <div class="user-modal-header">Select User</div>
+            <div class="user">
+              <form action="#">
+                <input
+                  type="checkbox"
+                  id="vehicle1"
+                  name="vehicle1"
+                  value="Amos Mwongela"
+                />
+                <label for="vehicle1"> Amos Mwongela</label><br />
+                <input
+                  type="checkbox"
+                  id="vehicle2"
+                  name="vehicle2"
+                  value="Julius Yego"
+                />
+                <label for="vehicle2">Amos Mwongela</label><br />
+                <input
+                  type="checkbox"
+                  id="vehicle3"
+                  name="vehicle3"
+                  value="Amos Wachira"
+                />
+                <label for="vehicle3"> Amos Mwongela</label><br /><br />
+                <input type="submit" value="Assign This Project" />
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="add-task">
+        <div class="form-head">
+          <p>New Project</p>
+          <div><img src="../images/addproject.png" alt="" /></div>
+        </div>
+        <form action="#">
+          <!-- <h3>Add A Project</h3> -->
+          <p>Name</p>
+          <input class="name" type="text" placeholder="Name" />
+          <p>Description</p>
+          <input class="description" type="text" placeholder="Description" />
+          <p>End Date</p>
+          <input class="end-date" type="date" placeholder="End Date" />
+          <input
+            class="assign-project-btn"
+            type="submit"
+            value="Assign Project"
+          />
+          <p class="msg"></p>
+        </form>
+        <div>
+          <div class="complete-projects-head">Completed Projects</div>
+          <div class="complete-project"></div>
+        </div>
+      </div>
+    </div>
+    <script src="../../dist/admin.js"></script>
+  </body>
+</html>
