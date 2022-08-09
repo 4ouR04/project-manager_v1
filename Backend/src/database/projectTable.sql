@@ -1,0 +1,1 @@
+CREATE TABLE Projects (Id VARCHAR(100) , Project VARCHAR(200) ,Due_date Date, Description VARCHAR(200), Status VARCHAR(200))

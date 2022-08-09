@@ -1,0 +1,1 @@
+-- CREATE TABLE Users (Id VARCHAR(100) , Email VARCHAR(200) , Password VARCHAR(200))
