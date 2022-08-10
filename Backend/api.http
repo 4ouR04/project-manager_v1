@@ -1,8 +1,20 @@
+
+
+GET http://localhost:3000/projectmanager/dashboard
+Content-Type: application/json
+
 POST  http://localhost:3000/projectmanager/signup
 Content-Type: application/json
 
+{
+    "email":"johnd@gmail.com",
+    "password":"12345678"
+}
+
+
 # Sign in User
-POST http://localhost:3000/projectmanager/login
+
+POST http://localhost:3000/projectmanager/login/
 Content-Type: application/json
 
 # Create new project
