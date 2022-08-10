@@ -8,13 +8,11 @@ import {
   signinUser,
   signupUser,
   updateProject,
-  getDashboard,
 } from "../controllers/controller";
 import { VerifyToken } from "../middleware/verifyToken";
 
 const router = Router();
 
-router.get("/dashboard", getDashboard);
 router.post("/signup", signupUser);
 router.post("/signin", signinUser);
 router.get("/projects", VerifyToken, getProjects);

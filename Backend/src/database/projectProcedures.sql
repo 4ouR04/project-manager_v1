@@ -1,7 +1,7 @@
-CREATE PROCEDURE insertProjects(@Id VARCHAR(100) , @Project VARCHAR(200) , @Due_date DATE, @Description VARCHAR(200))
+CREATE PROCEDURE insertProjects(@Id VARCHAR(100) , @ProjectName VARCHAR(200) , @Due_date DATE, @Description VARCHAR(200))
 AS
 BEGIN
-INSERT INTO Projects(Id,Project,Due_date,Description,Status) VALUES (@Id,@Project,@Due_date, @Description,"Pending")
+INSERT INTO Projects(Id,ProjectName,Due_date,Description,Status) VALUES (@Id, @ProjectName, @Due_date,  @Description, "Pending")
 END
 
 CREATE PROCEDURE getProjects
@@ -27,7 +27,7 @@ END
 CREATE PROCEDURE updateProject(@Id VARCHAR(100))
 AS
 BEGIN 
-UPDATE Projects SET Status="completed" WHERE Id =@Id
+UPDATE Projects SET Status="Completed" WHERE Id =@Id
 
 END
 

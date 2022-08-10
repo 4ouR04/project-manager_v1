@@ -1,8 +1,8 @@
 -- Create User  When They Sign Up
-CREATE PROCEDURE createUser (@ID VARCHAR(100) , @Email VARCHAR(200) , @Password VARCHAR(200))
+CREATE PROCEDURE createUser (@ID VARCHAR(100) ,@Name VARCHAR(200), @Email VARCHAR(200) , @Password VARCHAR(200))
 AS
 BEGIN
-INSERT INTO Users(Id,User,Email,Password) VALUES (@Id, @Email, @Password)
+INSERT INTO Users(Id, Name, Email, Password) VALUES (@Id, @Name, @Email, @Password)
 END
 
 -- Get one User

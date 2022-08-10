@@ -10,12 +10,13 @@ import { sqlConfig } from "../config/Config";
 import { UserSchema, UserSchema2 } from "../Helpers/UserValidator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import fs from "fs";
 
 export const signupUser = async (req: UserExtendedRequest, res: Response) => {
   try {
     const pool = await mssql.connect(sqlConfig);
     const Id = uid();
-    const { Email, Password, Name } = req.body;
+    const { Name, Email, Password } = req.body;
     const { error, value } = UserSchema.validate(req.body);
     if (error) {
       return res.json({ error: error.details[0].message });
@@ -24,8 +25,8 @@ export const signupUser = async (req: UserExtendedRequest, res: Response) => {
     await pool
       .request()
       .input("Id", mssql.VarChar, Id)
-      .input("Email", mssql.VarChar, Email)
       .input("Name", mssql.VarChar, Name)
+      .input("Email", mssql.VarChar, Email)
       .input("Password", mssql.VarChar, hashedpassword)
       .execute("createUser");
 
@@ -58,7 +59,7 @@ export const signinUser = async (req: UserExtendedRequest, res: Response) => {
 
     const validPassword = await bcrypt.compare(Password, user[0].Password);
     if (!validPassword) {
-      return res.json({ message: "Check the password and try again" });
+      return res.json({ Message: "Recheck the password and try again" });
     }
     const payload = user.map((item) => {
       const { Password, ...rest } = item;
@@ -67,6 +68,8 @@ export const signinUser = async (req: UserExtendedRequest, res: Response) => {
     const token = jwt.sign(payload[0], process.env.KEY as string, {
       expiresIn: "3600s",
     });
+
+    // Executes when user Enters correct credentials
     res.json({
       message: "Logged in successfully check projects assigned to you",
       token,
@@ -76,25 +79,18 @@ export const signinUser = async (req: UserExtendedRequest, res: Response) => {
   }
 };
 
-export const getDashboard = (req: Request, res: Response) => {
-  // if (req.info) {
-  //   return res.json({ message: `Welcome to the Homepage ${req.info.email}` });
-  // }
-  res.send("Welcome Back!!");
-};
-
 export const insertProject = async (
   req: ProjectExtendedRequest,
   res: Response
 ) => {
   try {
     const id = uid();
-    const { Project, Description, Due_date, Status } = req.body;
+    const { ProjectName, Description, Due_date, Status } = req.body;
     const pool = await mssql.connect(sqlConfig);
     await pool
       .request()
       .input("Id", mssql.VarChar, id)
-      .input("Project", mssql.VarChar, Project)
+      .input("ProjectName", mssql.VarChar, ProjectName)
       .input("Due_date", mssql.Date, Due_date)
       .input("Description", mssql.VarChar, Description)
       .input("Status", mssql.VarChar, Status)
@@ -143,8 +139,8 @@ export const updateProject: RequestHandler<{ id: string }> = async (
   try {
     const Id = req.params.id;
     const pool = await mssql.connect(sqlConfig);
-    const { Project, Description, Due_date, Status } = req.body as {
-      Project: string;
+    const { ProjectName, Description, Due_date, Status } = req.body as {
+      ProjectName: string;
       Due_date: string;
       Description: string;
       Status: string;
@@ -159,7 +155,7 @@ export const updateProject: RequestHandler<{ id: string }> = async (
       await pool
         .request()
         .input("Id", mssql.VarChar, Id)
-        .input("Project", mssql.VarChar, Project)
+        .input("ProjectName", mssql.VarChar, ProjectName)
         .input("Due_date", mssql.Date, Due_date)
         .input("Description", mssql.VarChar, Description)
         .input("Status", mssql.VarChar, Status)

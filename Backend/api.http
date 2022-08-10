@@ -35,6 +35,7 @@ Content-Type: application/json
 # PUT http://localhost:3000/projectmanager/projects/
 # Content-Type: application/json
 
-# # Delete one specific project with the project Id
-# DELETE  http://localhost:3000/projectmanager/projects/
-# Content-Type: application/json
+# Delete one specific project with the project Id
+
+DELETE  http://localhost:3000/projectmanager/projects/
+Content-Type: application/json
