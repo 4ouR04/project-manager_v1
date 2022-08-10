@@ -1,17 +1,83 @@
 import { Request, RequestHandler, Response } from "express";
+import {
+  UserExtendedRequest,
+  ProjectExtendedRequest,
+  User,
+} from "../interfaces/interfaces";
 import mssql from "mssql";
 import { v4 as uid } from "uuid";
 import { sqlConfig } from "../config/Config";
+import { UserSchema, UserSchema2 } from "../Helpers/UserValidator";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
-interface ExtendedRequest extends Request {
-  body: {
-    Project: string;
-    Due_date: Date;
-    Description: string;
-    Status: string;
-  };
-}
-export const insertProject = async (req: ExtendedRequest, res: Response) => {
+export const signupUser = async (req: UserExtendedRequest, res: Response) => {
+  try {
+    const pool = await mssql.connect(sqlConfig);
+    const id = uid();
+    const { email, password, name } = req.body;
+    const { error, value } = UserSchema.validate(req.body);
+    if (error) {
+      return res.json({ error: error.details[0].message });
+    }
+    const hashedpassword = await bcrypt.hash(password, 10);
+    await pool
+      .request()
+      .input("id", mssql.VarChar, id)
+      .input("email", mssql.VarChar, email)
+      .input("name", mssql.VarChar, name)
+      .input("password", mssql.VarChar, hashedpassword)
+      .execute("createAccount");
+
+    res.json({ message: "Account created successfully ,go back and login" });
+  } catch (error) {
+    res.json({ error });
+  }
+};
+
+export const signinUser = async (req: UserExtendedRequest, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    const pool = await mssql.connect(sqlConfig);
+    const { error, value } = UserSchema2.validate(req.body);
+    if (error) {
+      return res.json({ error: error.details[0].message });
+    }
+    const user: User[] = await (
+      await pool
+        .request()
+        .input("email", mssql.VarChar, email)
+        .execute("getAccount")
+    ).recordset;
+
+    if (!user[0]) {
+      return res.json({ message: "User Not Found" });
+    }
+
+    const validPassword = await bcrypt.compare(password, user[0].password);
+    if (!validPassword) {
+      return res.json({ message: "Invalid password" });
+    }
+    const payload = user.map((item) => {
+      const { password, ...rest } = item;
+      return rest;
+    });
+    const token = jwt.sign(payload[0], process.env.KEY as string, {
+      expiresIn: "3600s",
+    });
+    res.json({
+      message: "Logged in successfully check projects assigned to you",
+      token,
+    });
+  } catch (error) {
+    res.json({ error });
+  }
+};
+
+export const insertProject = async (
+  req: ProjectExtendedRequest,
+  res: Response
+) => {
   try {
     const id = uid();
     const { Project, Description, Due_date, Status } = req.body;

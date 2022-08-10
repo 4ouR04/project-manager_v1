@@ -1,2 +1,2 @@
-POST http://localhost:3000/projects/
+POST  http://localhost:3000/projectmanager/signup
 Content-Type: application/json
