@@ -5,6 +5,13 @@ BEGIN
 INSERT INTO Users(Id,User,Email,Password) VALUES (@Id, @Email, @Password)
 END
 
+-- Get one User
+CREATE PROCEDURE getUser(@Email VARCHAR(200))
+AS
+BEGIN
+SELECT * FROM Users WHERE Email =@Email
+END
+
 -- Get All Users
 CREATE PROCEDURE getUsers
 AS

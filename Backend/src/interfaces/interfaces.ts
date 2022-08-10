@@ -11,14 +11,23 @@ export interface ProjectExtendedRequest extends Request {
 
 export interface UserExtendedRequest extends Request {
   body: {
-    email: string;
-    password: string;
-    name: string;
+    Email: string;
+    Password: string;
+    Name: string;
   };
 }
 
 export interface User {
-  id: string;
-  email: string;
-  password: string;
+  Id: string;
+  Email: string;
+  Password: string;
+}
+
+export interface Data {
+  Id: string;
+  Email: string;
+  Name: string;
+  Role: string;
+  iat: number;
+  exp: number;
 }

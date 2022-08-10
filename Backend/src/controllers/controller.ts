@@ -14,30 +14,32 @@ import jwt from "jsonwebtoken";
 export const signupUser = async (req: UserExtendedRequest, res: Response) => {
   try {
     const pool = await mssql.connect(sqlConfig);
-    const id = uid();
-    const { email, password, name } = req.body;
+    const Id = uid();
+    const { Email, Password, Name } = req.body;
     const { error, value } = UserSchema.validate(req.body);
     if (error) {
       return res.json({ error: error.details[0].message });
     }
-    const hashedpassword = await bcrypt.hash(password, 10);
+    const hashedpassword = await bcrypt.hash(Password, 10);
     await pool
       .request()
-      .input("id", mssql.VarChar, id)
-      .input("email", mssql.VarChar, email)
-      .input("name", mssql.VarChar, name)
-      .input("password", mssql.VarChar, hashedpassword)
-      .execute("createAccount");
+      .input("Id", mssql.VarChar, Id)
+      .input("Email", mssql.VarChar, Email)
+      .input("Name", mssql.VarChar, Name)
+      .input("Password", mssql.VarChar, hashedpassword)
+      .execute("createUser");
 
     res.json({ message: "Account created successfully ,go back and login" });
-  } catch (error) {
-    res.json({ error });
+  } catch (Error: unknown) {
+    // res.send("Theres an error");
+
+    res.json({ Error });
   }
 };
 
 export const signinUser = async (req: UserExtendedRequest, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { Email, Password } = req.body;
     const pool = await mssql.connect(sqlConfig);
     const { error, value } = UserSchema2.validate(req.body);
     if (error) {
@@ -46,20 +48,20 @@ export const signinUser = async (req: UserExtendedRequest, res: Response) => {
     const user: User[] = await (
       await pool
         .request()
-        .input("email", mssql.VarChar, email)
-        .execute("getAccount")
+        .input("Email", mssql.VarChar, Email)
+        .execute("getUser")
     ).recordset;
 
     if (!user[0]) {
       return res.json({ message: "User Not Found" });
     }
 
-    const validPassword = await bcrypt.compare(password, user[0].password);
+    const validPassword = await bcrypt.compare(Password, user[0].Password);
     if (!validPassword) {
-      return res.json({ message: "Invalid password" });
+      return res.json({ message: "Check the password and try again" });
     }
     const payload = user.map((item) => {
-      const { password, ...rest } = item;
+      const { Password, ...rest } = item;
       return rest;
     });
     const token = jwt.sign(payload[0], process.env.KEY as string, {
@@ -69,9 +71,16 @@ export const signinUser = async (req: UserExtendedRequest, res: Response) => {
       message: "Logged in successfully check projects assigned to you",
       token,
     });
-  } catch (error) {
-    res.json({ error });
+  } catch (Error) {
+    res.json({ Error });
   }
+};
+
+export const getDashboard = (req: Request, res: Response) => {
+  // if (req.info) {
+  //   return res.json({ message: `Welcome to the Homepage ${req.info.email}` });
+  // }
+  res.send("Welcome Back!!");
 };
 
 export const insertProject = async (
@@ -92,8 +101,8 @@ export const insertProject = async (
       .execute("insertProjects");
 
     res.json({ message: `Project has been created successfully!!` });
-  } catch (error) {
-    res.json({ error });
+  } catch (Error) {
+    res.json({ Error });
   }
 };
 
@@ -103,9 +112,8 @@ export const getProjects: RequestHandler = async (req, res) => {
     const Projects = await pool.request().execute("getProjects");
     const { recordset } = Projects;
     res.json(recordset);
-  } catch (error) {
-    // res.json({ error });
-    res.send(`Cant connect`);
+  } catch (Error) {
+    res.json({ Error });
   }
 };
 
@@ -123,8 +131,8 @@ export const getProject: RequestHandler<{ id: string }> = async (req, res) => {
     } else {
       res.json(recordset);
     }
-  } catch (error) {
-    res.json({ error });
+  } catch (Error) {
+    res.json({ Error });
   }
 };
 
@@ -158,8 +166,8 @@ export const updateProject: RequestHandler<{ id: string }> = async (
         .execute("updateProject");
       res.json({ message: `Project has been updated` });
     }
-  } catch (error: any) {
-    res.json({ error });
+  } catch (Error: unknown) {
+    res.json({ Error });
   }
 };
 
@@ -184,7 +192,7 @@ export const deleteProject: RequestHandler<{ id: string }> = async (
         .execute("deleteProject");
       res.json({ message: `Project has been deleted` });
     }
-  } catch (error: any) {
-    res.json({ error });
+  } catch (Error: unknown) {
+    res.json({ Error });
   }
 };
