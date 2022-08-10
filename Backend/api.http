@@ -1,2 +1,27 @@
 POST  http://localhost:3000/projectmanager/signup
 Content-Type: application/json
+
+# Sign in User
+POST http://localhost:3000/projectmanager/login
+Content-Type: application/json
+
+# Create new project
+POST http://localhost:3000/projectmanager/projects
+Content-Type: application/json
+
+# See all projects
+GET http://localhost:3000/projectmanager/projects
+Content-Type: application/json
+
+# See one specific project. Provide an Id
+GET http://localhost:3000/projectmanager/projects/
+Content-Type: application/json
+
+
+# Update project status with project Id
+PUT http://localhost:3000/projectmanager/projects/
+Content-Type: application/json
+
+# Delete one specific project with the project Id
+DELETE  http://localhost:3000/projectmanager/projects/
+Content-Type: application/json
