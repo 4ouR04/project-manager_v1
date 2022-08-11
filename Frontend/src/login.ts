@@ -124,7 +124,7 @@ login.addEventListener("click", (e: Event) => {
   if (Email == "" || Password === "") {
     console.error("Please fill in all Fields");
   } else {
-    console.log(Email + Password);
+    // console.log(Email + Password);
     Users.getUser().loginUser(Email, Password);
   }
 });

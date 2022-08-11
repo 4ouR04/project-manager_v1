@@ -1,7 +1,10 @@
+// import { Pform } from "./interfaces";
 // --------------------Form inputs------------------------------------------------
 
 const ProjectName = document.querySelector(".name") as HTMLInputElement;
-const Description = document.querySelector(".description") as HTMLInputElement;
+const projectDescription = document.querySelector(
+  ".description"
+) as HTMLInputElement;
 const EndDate = document.querySelector(".end-date") as HTMLInputElement;
 const AddBtn = document.querySelector(
   ".assign-project-btn"
@@ -10,9 +13,7 @@ const AddBtn = document.querySelector(
 const Message = document.querySelector(".msg") as HTMLParagraphElement;
 // ---------------------Project Header-----------------------------------------
 
-const ProjectHead = document.querySelector(
-  ".projects-head"
-) as HTMLParagraphElement;
+const ProjectHead = document.querySelector(".projects-head") as HTMLDivElement;
 
 // --------------------Project Container---------------------------------------
 
@@ -20,8 +21,7 @@ const ProjectContainer = document.querySelector(
   ".project-container"
 ) as HTMLDivElement;
 
-//---------------------Assign Button-----------------------------------------------
-
+const projError = document.querySelector(".errproject") as HTMLDivElement;
 // ---------------------Modal section-0---------------------------------------
 
 const userModal = document.querySelector(".user-modal") as HTMLDivElement;
@@ -49,38 +49,41 @@ const userModal = document.querySelector(".user-modal") as HTMLDivElement;
   div.appendChild(AssignBtn);
   div.appendChild(DeleteBtn);
 
-  fetch("http://localhost:3000/users/projects")
+  fetch("http://localhost:3000/projects/")
     .then((response) => response.json())
     .then((data) => {
-      data.forEach((project: any) => {
-        Project.innerHTML = `
+      console.log(data);
+
+      Project.innerHTML = `
       <div>  
-      <p class="tname" >${project.Name}</p>
-      <p>${project.Description}</p>
-      <p>Due before(<span class="date">${project.end_date}</span>)</p>
+      <p class="tname" >${data.Name}</p>
+      <p>${data.Description}</p>
+      <p>Due before(<span class="date">${data.Due_date}</span>)</p>
       </div>
       `;
 
-        Project.appendChild(div);
-        ProjectContainer.appendChild(Project);
-        // ProjectContainer.insertAdjacentHTML("beforeend", rawproject);
-      });
+      Project.appendChild(div);
+      ProjectContainer.appendChild(Project);
+      // ProjectContainer.insertAdjacentHTML("beforeend", rawproject);
+      projError.style.display = "none";
+    })
+    .then(() => {
+      (() => {
+        if (ProjectContainer.children.length == 0) {
+          ProjectHead.innerHTML = `
+        <div><p>No Projects To Display</p></div>
+        <div><img src="../images/noprojects.png"/><div>
+    `;
+        } else {
+          ProjectHead.innerHTML = `
+        <div><p>Current Projects</p></div>
+        <div><img src="../images/projects.png"/><div>
+    `;
+        }
+      })();
     });
 })();
-// ***************************************************************************************8
-(() => {
-  if (ProjectContainer.children.length == 0) {
-    ProjectHead.innerHTML = `
-    <div><p>No Projects To Display</p></div>
-    <div><img src="../images/noprojects.png"/><div>
-    `;
-  } else {
-    ProjectHead.innerHTML = `
-    <div><p>Current Projects</p></div>
-    <div><img src="../images/projects.png"/><div>
-    `;
-  }
-})();
+// ***************************************************************************************
 
 //--------------------------Functions--------------------------------------------
 // Clear Inputs
@@ -88,45 +91,36 @@ const userModal = document.querySelector(".user-modal") as HTMLDivElement;
 const ClearInputs = () => {
   ProjectName.value = "";
   EndDate.value = "";
-  Description.value = "";
+  projectDescription.value = "";
 };
 
 // accept data
 
-const AcceptData = () => {
-  // ProjectHead.innerHTML = `
-  //   <div><p>Current Projects</p></div>
-  //   <div><img src="../images/projects.png"/><div>
-  // `;
+const AcceptData = (name: string, description: string, date: string) => {
+  const prom = new Promise<{ error?: string; message?: string }>(
+    (resolve, reject) => {
+      fetch("http://localhost:3000/projects/", {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          Name: name,
+          Description: description,
+          Date: date,
+        }),
+      })
+        .then((res) => {
+          resolve(res.json());
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }
+  );
 
-  // let Project = document.createElement("div");
-  // Project.className = "project";
-  // let div = document.createElement("div");
-  // let AssignBtn = document.createElement("button");
-  // let DeleteBtn = document.createElement("button");
-  // DeleteBtn.className = "delete-btn";
-  // DeleteBtn.innerText = "Delete";
-  // AssignBtn.className = "assign-btn";
-  // AssignBtn.innerText = "Assign To";
-  // AssignBtn.addEventListener("click", () => {
-  //   userModal.style.display = "flex";
-  //   userModal.addEventListener("click", () => {
-  //     userModal.style.display = "none";
-  //   });
-  // });
-  // div.appendChild(AssignBtn);
-  // div.appendChild(DeleteBtn);
-  // Project.innerHTML = `
-  //    <div>
-  //       <p class="tname" >${ProjectName.value}</p>
-  //       <p>${Description.value}</p>
-  //       <p>Due before(<span class="date">${EndDate.value}</span>)</p>
-  //   </div>
-
-  //   `;
-  // Project.appendChild(div);
-
-  // ProjectContainer.appendChild(Project);
+  prom.then((data) => console.log(data)).catch((err) => console.log(err));
 
   ClearInputs();
 };
@@ -134,11 +128,11 @@ const AcceptData = () => {
 // Validate Form
 
 const ValidateForm = () => {
-  if (
-    ProjectName.value === "" ||
-    Description.value == "" ||
-    EndDate.value === ""
-  ) {
+  const Name = ProjectName.value;
+  const Description = projectDescription.value;
+  const Date = EndDate.value;
+
+  if (Name === "" || Description == "" || Date === "") {
     Message.innerHTML = `Fill all fields`;
     Message.style.color = "red";
 
@@ -148,7 +142,7 @@ const ValidateForm = () => {
 
     return false;
   } else {
-    AcceptData();
+    AcceptData(Name, Description, Date);
   }
 };
 

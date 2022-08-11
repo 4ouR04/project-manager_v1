@@ -42,6 +42,21 @@ body {
   /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
   /* overflow: scroll; */
 }
+.errproject {
+  margin: 0 2rem 0rem 1rem;
+  /* padding: 1rem 1rem 1rem 1.5rem; */
+  height: 20.3rem;
+  border: 1px solid lightgrey;
+  text-align: center;
+}
+.errproject img {
+  height: 15rem;
+  width: 15rem;
+}
+.errproject p {
+  font-size: 1.2rem;
+  transform: translateY(-89);
+}
 .projects-head {
   margin: 0 2rem 0rem 1rem;
   display: grid;
@@ -125,7 +140,18 @@ img {
   /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
   /* overflow: scroll; */
 }
-
+.errcomplete-project {
+  margin: 0 1rem 0rem 1rem;
+  /* padding: 1rem 1.5rem; */
+  /* background-color: lightgrey; */
+  height: 6rem;
+  border: 1px solid lightgrey;
+  text-align: center;
+}
+.errcomplete-project img {
+  height: 4rem;
+  width: 4rem;
+}
 /* Modal to select user */
 .user-modal {
   display: none;
