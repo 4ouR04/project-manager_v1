@@ -103,15 +103,36 @@ export const insertProject = async (
   }
 };
 
-export const getProjects: RequestHandler = async (req, res) => {
-  try {
-    const pool = await mssql.connect(sqlConfig);
-    const Projects = await pool.request().execute("getProjects");
-    const { recordset } = Projects;
-    res.json(recordset);
-  } catch (Error) {
-    res.json({ Error });
-  }
+export const getProjects = async (req: Request, res: Response) => {
+  // try {
+  //   const pool = await mssql.connect(sqlConfig);
+  //   const Projects = await pool.request().execute("getProjects");
+  //   const { recordset } = Projects;
+  //   res.json(recordset);
+  // } catch (Error) {
+  //   res.json({ Error });
+  // }
+  res.json({
+    Name: "Nodejs",
+    Description: "Export csv files",
+    Due_date: "12/09/2022",
+  });
+};
+
+export const getCompletedProjects = async (req: Request, res: Response) => {
+  // try {
+  //   const pool = await mssql.connect(sqlConfig);
+  //   const Projects = await pool.request().execute("getCompletedProjects");
+  //   const { recordset } = Projects;
+  //   res.json(recordset);
+  // } catch (Error) {
+  //   res.json({ Error });
+  // }
+  res.json({
+    Name: "Python",
+    Description: "Exporting csv files",
+    Due_date: "12/09/2022",
+  });
 };
 
 export const getProject: RequestHandler<{ id: string }> = async (req, res) => {

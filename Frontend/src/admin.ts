@@ -22,6 +22,13 @@ const ProjectContainer = document.querySelector(
 ) as HTMLDivElement;
 
 const projError = document.querySelector(".errproject") as HTMLDivElement;
+const errcomplete = document.querySelector(
+  ".errcomplete-project"
+) as HTMLDivElement;
+
+const completeContainer = document.querySelector(
+  ".complete-project-container"
+) as HTMLDivElement;
 // ---------------------Modal section-0---------------------------------------
 
 const userModal = document.querySelector(".user-modal") as HTMLDivElement;
@@ -46,7 +53,7 @@ const userModal = document.querySelector(".user-modal") as HTMLDivElement;
       userModal.style.display = "none";
     });
   });
-  div.appendChild(AssignBtn);
+  // div.appendChild(AssignBtn);
   div.appendChild(DeleteBtn);
 
   fetch("http://localhost:3000/projects/")
@@ -55,7 +62,9 @@ const userModal = document.querySelector(".user-modal") as HTMLDivElement;
       console.log(data);
 
       Project.innerHTML = `
-      <div>  
+      <div >  
+      <div class="avatar" ><img src="../images/images.jpeg"><p>Amos Mwongela</p></div>
+      <hr>
       <p class="tname" >${data.Name}</p>
       <p>${data.Description}</p>
       <p>Due before(<span class="date">${data.Due_date}</span>)</p>
@@ -81,6 +90,26 @@ const userModal = document.querySelector(".user-modal") as HTMLDivElement;
     `;
         }
       })();
+    })
+
+    .then(() => {
+      let completeProject = document.createElement("div");
+
+      fetch("http://localhost:3000/projects/completed")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+
+          completeProject.innerHTML = `
+            <div class="complete-project">  
+                <p class="tname" >${data.Name}</p>
+            </div>
+            `;
+
+          completeContainer.appendChild(completeProject);
+          // ProjectContainer.insertAdjacentHTML("beforeend", rawproject);
+          errcomplete.remove();
+        });
     });
 })();
 // ***************************************************************************************

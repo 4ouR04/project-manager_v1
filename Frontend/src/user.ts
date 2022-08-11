@@ -16,3 +16,13 @@ const projectHead = document.querySelector(".projects-head") as HTMLDivElement;
     `;
   }
 })();
+
+const completeProject = () => {
+  fetch("http://localhost:3000/projects/completed")
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+    });
+};
+
+const getCompletedProjects = () => {};

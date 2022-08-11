@@ -17,15 +17,6 @@ const signupName = document.querySelector(".name") as HTMLInputElement;
 const signupEmail = document.querySelector(".email") as HTMLInputElement;
 const signupPassword = document.querySelector(".pass") as HTMLInputElement;
 
-signUpButton.addEventListener("click", () => {
-  container.classList.add("right-panel-active");
-});
-
-signInButton.addEventListener("click", () => {
-  container.classList.remove("right-panel-active");
-});
-
-//
 class Users {
   static getUser() {
     return new Users();
@@ -63,7 +54,7 @@ class Users {
         Data.token ? localStorage.setItem("token", Data.token) : "";
         this.redirect();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err));
   }
 
   register(name: string, email: string, password: string) {
@@ -90,7 +81,7 @@ class Users {
       }
     );
 
-    prom.then((data) => console.log(data)).catch((err) => console.log(err));
+    prom.then((data) => console.log(data)).catch((err) => console.error(err));
   }
 
   redirect() {
@@ -117,7 +108,7 @@ class Users {
   }
 }
 
-login.addEventListener("click", (e: Event) => {
+login?.addEventListener("click", (e: Event) => {
   e.preventDefault();
   const Email = loginEmail.value;
   const Password = loginPassword.value;
@@ -129,12 +120,12 @@ login.addEventListener("click", (e: Event) => {
   }
 });
 
-signup.addEventListener("click", () => {
+signup?.addEventListener("click", () => {
   const Name = signupName.value;
   const Email = signupEmail.value;
   const Password = signupPassword.value;
   if (Name == "" || Email == "" || Password === "") {
-    console.log("Please fill in all Fields");
+    console.error("Please fill in all Fields");
   } else {
     Users.getUser().register(Name, Email, Password);
   }

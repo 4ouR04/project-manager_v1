@@ -3,6 +3,7 @@ import { verify } from "jsonwebtoken";
 import {
   deleteProject,
   getProject,
+  getCompletedProjects,
   getProjects,
   insertProject,
   signinUser,
@@ -17,10 +18,11 @@ const router = Router();
 router.post("/signup", signupUser);
 router.post("/signin", signinUser);
 router.get("/check", checkUser);
-router.get("/projects", VerifyToken, getProjects);
-router.get("/projects/:id", VerifyToken, getProject);
-router.post("/projects", VerifyToken, insertProject);
-router.put("/projects/update/:id", VerifyToken, updateProject);
-router.delete("/projects/:id", VerifyToken, deleteProject);
+router.get("/", getProjects);
+router.get("/completed", getCompletedProjects);
+router.get("/:id", VerifyToken, getProject);
+router.post("/", VerifyToken, insertProject);
+router.put("/:id", VerifyToken, updateProject);
+router.delete("/:id", VerifyToken, deleteProject);
 
 export default router;

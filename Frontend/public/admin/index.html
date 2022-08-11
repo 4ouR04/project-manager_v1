@@ -73,18 +73,16 @@
           <input class="description" type="text" placeholder="Description" />
           <p>End Date</p>
           <input class="end-date" type="date" placeholder="End Date" />
-          <input
-            class="assign-project-btn"
-            type="submit"
-            value="Assign Project"
-          />
+          <input class="assign-project-btn" type="submit" value="Add Project" />
           <p class="msg"></p>
         </form>
         <div>
           <div class="complete-projects-head">Completed Projects</div>
-          <div class="errcomplete-project">
-            <img src="../images/error.png" />
-            <p>The server maybe offline</p>
+          <div class="complete-project-container">
+            <div class="errcomplete-project">
+              <img src="../images/error.png" />
+              <p>Error fetching completed projects!!</p>
+            </div>
           </div>
         </div>
       </div>

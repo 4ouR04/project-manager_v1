@@ -1,4 +1,4 @@
-CREATE PROCEDURE insertProjects(@Id VARCHAR(100) , @ProjectName VARCHAR(200) , @Due_date DATE, @Description VARCHAR(200))
+CREATE PROCEDURE insertProjects(@Id VARCHAR(100) , @ProjectName VARCHAR(200) , @Due_date DATE, @Description VARCHAR(200),@Status VARCHAR(100))
 AS
 BEGIN
 INSERT INTO Projects(Id,ProjectName,Due_date,Description,Status) VALUES (@Id, @ProjectName, @Due_date,  @Description, "Pending")
