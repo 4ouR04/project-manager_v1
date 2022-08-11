@@ -2,6 +2,7 @@ const signUpButton = document.getElementById("signUp") as HTMLButtonElement;
 const signInButton = document.getElementById("signIn") as HTMLButtonElement;
 const container = document.getElementById("container") as HTMLDivElement;
 
+// Sign in
 const login = document.querySelector(".login") as HTMLButtonElement;
 
 const loginEmail = document.querySelector(".loginEmail") as HTMLInputElement;
