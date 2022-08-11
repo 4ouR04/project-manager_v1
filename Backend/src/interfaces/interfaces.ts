@@ -8,6 +8,9 @@ export interface ProjectExtendedRequest extends Request {
     Status: string;
   };
 }
+export interface Extended extends Request {
+  info?: Data;
+}
 
 export interface UserExtendedRequest extends Request {
   body: {

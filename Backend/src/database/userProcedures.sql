@@ -19,6 +19,13 @@ BEGIN
 SELECT * FROM Users
 END
 
+-- Check user role
+CREATE PROCEDURE checkUserRole
+AS
+BEGIN 
+SELECT * FROM Users WHERE Role ="Admin"
+END
+
 -- Delete User
 CREATE PROCEDURE deleteUser(@ID VARCHAR(100))
 AS

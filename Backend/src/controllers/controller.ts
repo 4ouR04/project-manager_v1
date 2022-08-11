@@ -1,5 +1,6 @@
 import { Request, RequestHandler, Response } from "express";
 import {
+  Extended,
   UserExtendedRequest,
   ProjectExtendedRequest,
   User,
@@ -190,5 +191,11 @@ export const deleteProject: RequestHandler<{ id: string }> = async (
     }
   } catch (Error: unknown) {
     res.json({ Error });
+  }
+};
+
+export const checkUser = async (req: Extended, res: Response) => {
+  if (req.info) {
+    res.json({ name: req.info.Name, role: req.info.Role });
   }
 };

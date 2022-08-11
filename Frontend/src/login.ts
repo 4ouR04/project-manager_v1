@@ -2,9 +2,19 @@ const signUpButton = document.getElementById("signUp") as HTMLButtonElement;
 const signInButton = document.getElementById("signIn") as HTMLButtonElement;
 const container = document.getElementById("container") as HTMLDivElement;
 
-const inputName = document.querySelector(".name") as HTMLInputElement;
-const inputEmail = document.querySelector(".email") as HTMLInputElement;
-const inputPassword = document.querySelector(".pass") as HTMLInputElement;
+const login = document.querySelector(".login") as HTMLButtonElement;
+
+const loginEmail = document.querySelector(".loginEmail") as HTMLInputElement;
+const loginPassword = document.querySelector(
+  ".loginPassword"
+) as HTMLInputElement;
+
+// Sign up
+const signup = document.querySelector(".signup") as HTMLButtonElement;
+
+const signupName = document.querySelector(".name") as HTMLInputElement;
+const signupEmail = document.querySelector(".email") as HTMLInputElement;
+const signupPassword = document.querySelector(".pass") as HTMLInputElement;
 
 signUpButton.addEventListener("click", () => {
   container.classList.add("right-panel-active");
@@ -28,15 +38,15 @@ class Users {
       token?: string;
       message?: string;
     }>((resolve, reject) => {
-      fetch("http://localhost:3000/projectmanager/login", {
+      fetch("http://localhost:3000/users/signin", {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
         method: "POST",
         body: JSON.stringify({
-          Email: Email,
-          Password: Password,
+          Email: email,
+          Password: password,
         }),
       })
         .then((res) => {
@@ -48,8 +58,8 @@ class Users {
     });
 
     prom
-      .then((data) => {
-        data.token ? localStorage.setItem("token", data.token) : "";
+      .then((Data) => {
+        Data.token ? localStorage.setItem("token", Data.token) : "";
         this.redirect();
       })
       .catch((err) => console.log(err));
@@ -58,16 +68,16 @@ class Users {
   register(name: string, email: string, password: string) {
     const prom = new Promise<{ error?: string; message?: string }>(
       (resolve, reject) => {
-        fetch("http://localhost:3000/user/signup", {
+        fetch("http://localhost:3000/users/signup", {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
           method: "POST",
           body: JSON.stringify({
-            email: email,
-            name: name,
-            password: password,
+            Name: name,
+            Email: email,
+            Password: password,
           }),
         })
           .then((res) => {
@@ -84,8 +94,8 @@ class Users {
 
   redirect() {
     const token = localStorage.getItem("token") as string;
-    new Promise<{ name: string; role: string }>((resolve, reject) => {
-      fetch("http://localhost:3000/user/check", {
+    new Promise<{ Name: string; Role: string }>((resolve, reject) => {
+      fetch("http://localhost:3000/users/check", {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -95,31 +105,33 @@ class Users {
       })
         .then((res) => resolve(res.json()))
         .catch((err) => reject(err));
-    }).then((data) => {
-      console.log(data);
-      localStorage.setItem("name", data.name);
-      if (data.role === "admin") {
-        location.href = "adminDashboard.html";
+    }).then((Data) => {
+      localStorage.setItem("Name", Data.Name);
+      if (Data.Role === "Admin") {
+        location.href = "../admin/index.html";
       } else {
-        location.href = "userdashboard.html";
+        location.href = "../user/index.html";
       }
     });
   }
 }
 
-const Name = inputName.value;
-const Email = inputEmail.value;
-const Password = inputPassword.value;
-
-signInButton.addEventListener("click", () => {
-  if (Email == "" || Password == "") {
-    console.log("Please fill in all Fields");
+login.addEventListener("click", (e: Event) => {
+  e.preventDefault();
+  const Email = loginEmail.value;
+  const Password = loginPassword.value;
+  if (Email == "" || Password === "") {
+    console.error("Please fill in all Fields");
   } else {
+    console.log(Email + Password);
     Users.getUser().loginUser(Email, Password);
   }
 });
 
-signUpButton.addEventListener("click", () => {
+signup.addEventListener("click", () => {
+  const Name = signupName.value;
+  const Email = signupEmail.value;
+  const Password = signupPassword.value;
   if (Name == "" || Email == "" || Password === "") {
     console.log("Please fill in all Fields");
   } else {
