@@ -30,7 +30,7 @@ class Users {
       token?: string;
       message?: string;
     }>((resolve, reject) => {
-      fetch("http://localhost:3000/users/signin", {
+      fetch("http://localhost:3000/users/signin/", {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -47,20 +47,20 @@ class Users {
         .catch((err) => {
           reject(err);
         });
-    });
+    })
 
-    prom
-      .then((Data) => {
-        Data.token ? localStorage.setItem("token", Data.token) : "";
-        this.redirect();
-      })
+    // prom
+    //   .then((Data) => {
+    //     Data.token ? localStorage.setItem("token", Data.token) : "";
+    //     this.redirect();
+    //   })
       .catch((err) => console.error(err));
   }
 
   register(name: string, email: string, password: string) {
     const prom = new Promise<{ error?: string; message?: string }>(
       (resolve, reject) => {
-        fetch("http://localhost:3000/users/signup", {
+        fetch("http://localhost:3000/users/signin", {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
@@ -108,8 +108,8 @@ class Users {
   }
 }
 
-login?.addEventListener("click", (e: Event) => {
-  e.preventDefault();
+login?.addEventListener("click", () => {
+  
   const Email = loginEmail.value;
   const Password = loginPassword.value;
   if (Email == "" || Password === "") {

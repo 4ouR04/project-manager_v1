@@ -29,6 +29,7 @@ export const signupUser = async (req: UserExtendedRequest, res: Response) => {
       .input("Name", mssql.VarChar, Name)
       .input("Email", mssql.VarChar, Email)
       .input("Password", mssql.VarChar, hashedpassword)
+      .input("isAssigned", mssql.Bit, 0)
       .execute("createUser");
 
     res.json({ message: "Account created successfully ,go back and login" });

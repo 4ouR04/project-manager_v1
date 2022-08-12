@@ -46,6 +46,7 @@ const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             .input("Name", mssql_1.default.VarChar, Name)
             .input("Email", mssql_1.default.VarChar, Email)
             .input("Password", mssql_1.default.VarChar, hashedpassword)
+            .input("isAssigned", mssql_1.default.Bit, 0)
             .execute("createUser");
         res.json({ message: "Account created successfully ,go back and login" });
     }
