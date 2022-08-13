@@ -41,44 +41,7 @@ export const signupUser = async (req: UserExtendedRequest, res: Response) => {
 };
 
 export const signinUser = async (req: UserExtendedRequest, res: Response) => {
-  try {
-    const { Email, Password } = req.body;
-    const pool = await mssql.connect(sqlConfig);
-    const { error, value } = UserSchema2.validate(req.body);
-    if (error) {
-      return res.json({ error: error.details[0].message });
-    }
-    const user: User[] = await (
-      await pool
-        .request()
-        .input("Email", mssql.VarChar, Email)
-        .execute("getUser")
-    ).recordset;
 
-    if (!user[0]) {
-      return res.json({ message: "User Not Found" });
-    }
-
-    const validPassword = await bcrypt.compare(Password, user[0].Password);
-    if (!validPassword) {
-      return res.json({ Message: "Recheck the password and try again" });
-    }
-    const payload = user.map((item) => {
-      const { Password, ...rest } = item;
-      return rest;
-    });
-    const token = jwt.sign(payload[0], process.env.KEY as string, {
-      expiresIn: "3600s",
-    });
-
-    // Executes when user Enters correct credentials
-    res.json({
-      message: "Logged in successfully check projects assigned to you",
-      token,
-    });
-  } catch (Error) {
-    res.json({ Error });
-  }
 };
 
 export const insertProject = async (

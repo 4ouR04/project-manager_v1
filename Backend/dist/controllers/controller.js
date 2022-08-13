@@ -8,17 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -29,7 +18,6 @@ const uuid_1 = require("uuid");
 const Config_1 = require("../config/Config");
 const UserValidator_1 = require("../Helpers/UserValidator");
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const pool = yield mssql_1.default.connect(Config_1.sqlConfig);
@@ -57,40 +45,6 @@ const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.signupUser = signupUser;
 const signinUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { Email, Password } = req.body;
-        const pool = yield mssql_1.default.connect(Config_1.sqlConfig);
-        const { error, value } = UserValidator_1.UserSchema2.validate(req.body);
-        if (error) {
-            return res.json({ error: error.details[0].message });
-        }
-        const user = yield (yield pool
-            .request()
-            .input("Email", mssql_1.default.VarChar, Email)
-            .execute("getUser")).recordset;
-        if (!user[0]) {
-            return res.json({ message: "User Not Found" });
-        }
-        const validPassword = yield bcrypt_1.default.compare(Password, user[0].Password);
-        if (!validPassword) {
-            return res.json({ Message: "Recheck the password and try again" });
-        }
-        const payload = user.map((item) => {
-            const { Password } = item, rest = __rest(item, ["Password"]);
-            return rest;
-        });
-        const token = jsonwebtoken_1.default.sign(payload[0], process.env.KEY, {
-            expiresIn: "3600s",
-        });
-        // Executes when user Enters correct credentials
-        res.json({
-            message: "Logged in successfully check projects assigned to you",
-            token,
-        });
-    }
-    catch (Error) {
-        res.json({ Error });
-    }
 });
 exports.signinUser = signinUser;
 const insertProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

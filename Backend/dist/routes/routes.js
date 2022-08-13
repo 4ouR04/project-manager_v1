@@ -4,8 +4,6 @@ const express_1 = require("express");
 const controller_1 = require("../controllers/controller");
 const verifyToken_1 = require("../middleware/verifyToken");
 const router = (0, express_1.Router)();
-router.post("/signup", controller_1.signupUser);
-router.post("/signin", controller_1.signinUser);
 router.get("/check", controller_1.checkUser);
 router.get("/", controller_1.getProjects);
 router.get("/completed", controller_1.getCompletedProjects);

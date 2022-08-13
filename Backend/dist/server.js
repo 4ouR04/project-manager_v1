@@ -27,6 +27,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importStar(require("express"));
+const controller_1 = require("./controllers/controller");
 const routes_1 = __importDefault(require("./routes/routes"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
@@ -35,6 +36,8 @@ const app = (0, express_1.default)();
 app.use((0, express_1.json)());
 app.use((0, cors_1.default)());
 const port = process.env.PORT || 3000;
+app.use("/login", controller_1.signupUser);
+app.use("/signup", controller_1.signinUser);
 app.use("/users", routes_1.default);
 app.use("/projects", routes_1.default);
 app.listen(process.env.PORT, () => {
