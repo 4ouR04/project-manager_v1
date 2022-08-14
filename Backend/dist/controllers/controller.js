@@ -8,59 +8,140 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkUser = exports.deleteProject = exports.updateProject = exports.getProject = exports.getCompletedProjects = exports.getProjects = exports.insertProject = exports.signinUser = exports.signupUser = void 0;
-const mssql_1 = __importDefault(require("mssql"));
+exports.checkUser = exports.getProjects = exports.insertProject = exports.signin = exports.signup = void 0;
 const uuid_1 = require("uuid");
 const Config_1 = require("../config/Config");
 const UserValidator_1 = require("../Helpers/UserValidator");
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const pool = yield mssql_1.default.connect(Config_1.sqlConfig);
         const Id = (0, uuid_1.v4)();
-        const { Name, Email, Password } = req.body;
-        const { error, value } = UserValidator_1.UserSchema.validate(req.body);
+        const { Name, Email, Password, Role, isAssigned } = req.body;
+        const { error, value } = UserValidator_1.userSchema.validate(req.body);
         if (error) {
             return res.json({ error: error.details[0].message });
         }
-        const hashedpassword = yield bcrypt_1.default.hash(Password, 10);
-        yield pool
-            .request()
-            .input("Id", mssql_1.default.VarChar, Id)
-            .input("Name", mssql_1.default.VarChar, Name)
-            .input("Email", mssql_1.default.VarChar, Email)
-            .input("Password", mssql_1.default.VarChar, hashedpassword)
-            .input("isAssigned", mssql_1.default.Bit, 0)
-            .execute("createUser");
-        res.json({ message: "Account created successfully ,go back and login" });
+        else {
+            const hashedpassword = yield bcrypt_1.default.hash(Password, 10);
+            let details = {
+                UserId: Id,
+                Name: Name,
+                Email: Email,
+                Password: hashedpassword,
+                Role: Role,
+                isAssigned: isAssigned,
+            };
+            let sql = "INSERT INTO Users SET ?";
+            let query = Config_1.db.query(sql, details, (err) => {
+                if (err) {
+                    return res.json({ err: err.message });
+                }
+                res.send("Account created");
+            });
+        }
     }
-    catch (Error) {
-        // res.send("Theres an error");
-        res.json({ Error });
+    catch (error) {
+        return res.json({ error });
     }
 });
-exports.signupUser = signupUser;
-const signinUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.signup = signup;
+const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { Email, Password } = req.body;
+        const { error, value } = UserValidator_1.UserSchema1.validate(req.body);
+        if (error) {
+            return res.json({ error: error.details[0].message });
+        }
+        else {
+            let query = `SELECT * FROM Users WHERE Email = "${Email}"`;
+            let user = Config_1.db.query(query, (Error, User) => __awaiter(void 0, void 0, void 0, function* () {
+                if (Error) {
+                    return res.json({ err: Error.message });
+                }
+                if (!User[0]) {
+                    res.send({ message: "User Not Found" });
+                    return false;
+                }
+                else {
+                    const validPassword = yield bcrypt_1.default.compare(Password, User[0].Password);
+                    if (!validPassword) {
+                        res.send({ Message: "Recheck the password and try again" });
+                        return false;
+                    }
+                    else {
+                        const payload = User.map((item) => {
+                            const { Password } = item, rest = __rest(item, ["Password"]);
+                            return rest;
+                        });
+                        const token = jsonwebtoken_1.default.sign(payload[0], process.env.KEY, {
+                            expiresIn: "3600s",
+                        });
+                        res.json({
+                            Message: "Logged in successfully check projects assigned to you",
+                            token,
+                        });
+                    }
+                }
+            }));
+        }
+    }
+    catch (error) { }
 });
-exports.signinUser = signinUser;
+exports.signin = signin;
+// ***********************************PRROJECTS**********************
 const insertProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const id = (0, uuid_1.v4)();
-        const { ProjectName, Description, Due_date, Status } = req.body;
-        const pool = yield mssql_1.default.connect(Config_1.sqlConfig);
-        yield pool
-            .request()
-            .input("Id", mssql_1.default.VarChar, id)
-            .input("ProjectName", mssql_1.default.VarChar, ProjectName)
-            .input("Due_date", mssql_1.default.Date, Due_date)
-            .input("Description", mssql_1.default.VarChar, Description)
-            .input("Status", mssql_1.default.VarChar, Status)
-            .execute("insertProjects");
-        res.json({ message: `Project has been created successfully!!` });
+        const Id = (0, uuid_1.v4)();
+        const { ProjectName, Description, Due_date, User } = req.body;
+        const { error, value } = UserValidator_1.projectSchema.validate(req.body);
+        if (error) {
+            return res.json({ error: error.details[0].message });
+        }
+        else {
+            let userquery = `SELECT * FROM Users WHERE Name="${User}"`;
+            let data = Config_1.db.query(userquery, (err, Data) => {
+                if (err) {
+                    return res.json({ err: err.message });
+                }
+                else {
+                    let UserId = Data[0].UserId;
+                    // res.json({Data: Data[0].UserId });
+                    let details = {
+                        ProjectId: Id,
+                        UserId: UserId,
+                        ProjectName: ProjectName,
+                        Description: Description,
+                        Due_date: Due_date,
+                        Status: "Pending",
+                    };
+                    let sql = "INSERT INTO Projects SET ?";
+                    let query = Config_1.db.query(sql, details, (err) => {
+                        if (err) {
+                            return res.json({ err: err.message });
+                        }
+                        res.json({
+                            Message: `Project has been created successfully!!`,
+                        });
+                    });
+                }
+            });
+        }
     }
     catch (Error) {
         res.json({ Error });
@@ -68,114 +149,118 @@ const insertProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.insertProject = insertProject;
 const getProjects = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // try {
-    //   const pool = await mssql.connect(sqlConfig);
-    //   const Projects = await pool.request().execute("getProjects");
-    //   const { recordset } = Projects;
-    //   res.json(recordset);
-    // } catch (Error) {
-    //   res.json({ Error });
-    // }
-    res.json({
-        Name: "Nodejs",
-        Description: "Export csv files",
-        Due_date: "12/09/2022",
-    });
+    try {
+        let allprojects = "SELECT * FROM Projects";
+        Config_1.db.query(allprojects, (err, projects) => {
+            if (err) {
+                return err;
+            }
+            res.json(projects);
+        });
+        // const { recordset } = projects;
+    }
+    catch (Error) {
+        res.json({ Error });
+    }
 });
 exports.getProjects = getProjects;
-const getCompletedProjects = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // try {
-    //   const pool = await mssql.connect(sqlConfig);
-    //   const Projects = await pool.request().execute("getCompletedProjects");
-    //   const { recordset } = Projects;
-    //   res.json(recordset);
-    // } catch (Error) {
-    //   res.json({ Error });
-    // }
-    res.json({
-        Name: "Python",
-        Description: "Exporting csv files",
-        Due_date: "12/09/2022",
-    });
-});
-exports.getCompletedProjects = getCompletedProjects;
-const getProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const Id = req.params.id;
-        const pool = yield mssql_1.default.connect(Config_1.sqlConfig);
-        const Projects = yield pool
-            .request()
-            .input("id", mssql_1.default.VarChar, Id)
-            .execute("getProject");
-        const { recordset } = Projects;
-        if (!Projects.recordset[0]) {
-            res.json({ message: `Project with id ${Id} cannot be found` });
-        }
-        else {
-            res.json(recordset);
-        }
-    }
-    catch (Error) {
-        res.json({ Error });
-    }
-});
-exports.getProject = getProject;
-const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const Id = req.params.id;
-        const pool = yield mssql_1.default.connect(Config_1.sqlConfig);
-        const { ProjectName, Description, Due_date, Status } = req.body;
-        const Projects = yield pool
-            .request()
-            .input("Id", mssql_1.default.VarChar, Id)
-            .execute("getProject");
-        if (!Projects.recordset[0]) {
-            res.json({ message: `Project with id ${Id} cannot be found` });
-        }
-        else {
-            yield pool
-                .request()
-                .input("Id", mssql_1.default.VarChar, Id)
-                .input("ProjectName", mssql_1.default.VarChar, ProjectName)
-                .input("Due_date", mssql_1.default.Date, Due_date)
-                .input("Description", mssql_1.default.VarChar, Description)
-                .input("Status", mssql_1.default.VarChar, Status)
-                .execute("updateProject");
-            res.json({ message: `Project has been updated` });
-        }
-    }
-    catch (Error) {
-        res.json({ Error });
-    }
-});
-exports.updateProject = updateProject;
-const deleteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const Id = req.params.id;
-        const pool = yield mssql_1.default.connect(Config_1.sqlConfig);
-        const Projects = yield pool
-            .request()
-            .input("Id", mssql_1.default.VarChar, Id)
-            .execute("getProject");
-        if (!Projects.recordset[0]) {
-            res.json({ message: `Project with id ${Id} cannot be found` });
-        }
-        else {
-            yield pool
-                .request()
-                .input("Id", mssql_1.default.VarChar, Id)
-                .execute("deleteProject");
-            res.json({ message: `Project has been deleted` });
-        }
-    }
-    catch (Error) {
-        res.json({ Error });
-    }
-});
-exports.deleteProject = deleteProject;
+// export const getCompletedProjects = async (req: Request, res: Response) => {
+//   // try {
+//   //   const pool = await mssql.connect(sqlConfig);
+//   //   const Projects = await pool.request().execute("getCompletedProjects");
+//   //   const { recordset } = Projects;
+//   //   res.json(recordset);
+//   // } catch (Error) {
+//   //   res.json({ Error });
+//   // }
+//   res.json({
+//     Name: "Python",
+//     Description: "Exporting csv files",
+//     Due_date: "12/09/2022",
+//   });
+// };
+// export const getProject: RequestHandler<{ id: string }> = async (req, res) => {
+//   try {
+//     const Id = req.params.id;
+//     const pool = await mssql.connect(sqlConfig);
+//     const Projects = await pool
+//       .request()
+//       .input("id", mssql.VarChar, Id)
+//       .execute("getProject");
+//     const { recordset } = Projects;
+//     if (!Projects.recordset[0]) {
+//       res.json({ message: `Project with id ${Id} cannot be found` });
+//     } else {
+//       res.json(recordset);
+//     }
+//   } catch (Error) {
+//     res.json({ Error });
+//   }
+// };
+// export const updateProject: RequestHandler<{ id: string }> = async (
+//   req,
+//   res
+// ) => {
+//   try {
+//     const Id = req.params.id;
+//     const pool = await mssql.connect(sqlConfig);
+//     const { ProjectName, Description, Due_date, Status } = req.body as {
+//       ProjectName: string;
+//       Due_date: string;
+//       Description: string;
+//       Status: string;
+//     };
+//     const Projects = await pool
+//       .request()
+//       .input("Id", mssql.VarChar, Id)
+//       .execute("getProject");
+//     if (!Projects.recordset[0]) {
+//       res.json({ message: `Project with id ${Id} cannot be found` });
+//     } else {
+//       await pool
+//         .request()
+//         .input("Id", mssql.VarChar, Id)
+//         .input("ProjectName", mssql.VarChar, ProjectName)
+//         .input("Due_date", mssql.Date, Due_date)
+//         .input("Description", mssql.VarChar, Description)
+//         .input("Status", mssql.VarChar, Status)
+//         .execute("updateProject");
+//       res.json({ message: `Project has been updated` });
+//     }
+//   } catch (Error: unknown) {
+//     res.json({ Error });
+//   }
+// };
+// export const deleteProject: RequestHandler<{ id: string }> = async (
+//   req,
+//   res
+// ) => {
+//   try {
+//     const Id = req.params.id;
+//     const pool = await mssql.connect(sqlConfig);
+//     const Projects = await pool
+//       .request()
+//       .input("Id", mssql.VarChar, Id)
+//       .execute("getProject");
+//     if (!Projects.recordset[0]) {
+//       res.json({ message: `Project with id ${Id} cannot be found` });
+//     } else {
+//       await pool
+//         .request()
+//         .input("Id", mssql.VarChar, Id)
+//         .execute("deleteProject");
+//       res.json({ message: `Project has been deleted` });
+//     }
+//   } catch (Error: unknown) {
+//     res.json({ Error });
+//   }
+// };
 const checkUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.info) {
-        res.json({ name: req.info.Name, role: req.info.Role });
+        res.json({ Name: req.info.Name, Role: req.info.Role });
+    }
+    else {
+        res.json({ Error });
     }
 });
 exports.checkUser = checkUser;

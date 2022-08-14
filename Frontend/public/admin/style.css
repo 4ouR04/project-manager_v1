@@ -45,17 +45,19 @@ body {
 .errproject {
   margin: 0 2rem 0rem 1rem;
   /* padding: 1rem 1rem 1rem 1.5rem; */
-  height: 20.3rem;
+  height: 34.5rem;
   border: 1px solid lightgrey;
   text-align: center;
 }
 .errproject img {
   height: 15rem;
   width: 15rem;
+  margin-top: 7rem;
+  /* border: 1px solid black; */
 }
 .errproject p {
   font-size: 1.2rem;
-  transform: translateY(-89);
+  transform: translateY(-300%);
 }
 .projects-head {
   margin: 0 2rem 0rem 1rem;
@@ -121,6 +123,17 @@ img {
 .add-task input[type="submit"] {
   width: 100%;
   height: 2.7rem;
+}
+
+label{
+  height: 2.5rem;
+  margin: 0.6rem 0;
+
+}
+select{
+  height: 1.5rem;
+  margin: 0.6rem 0;
+
 }
 .avatar {
   display: grid;

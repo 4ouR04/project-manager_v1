@@ -18,7 +18,7 @@ class Users {
     constructor() { }
     loginUser(email, password) {
         const prom = new Promise((resolve, reject) => {
-            fetch("http://localhost:3000/users/signin", {
+            fetch("http://localhost:3002/users/login", {
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json",
@@ -35,9 +35,9 @@ class Users {
                 .catch((err) => {
                 reject(err);
             });
-        });
-        prom
+        })
             .then((Data) => {
+            console.log(Data);
             Data.token ? localStorage.setItem("token", Data.token) : "";
             this.redirect();
         })
@@ -45,7 +45,7 @@ class Users {
     }
     register(name, email, password) {
         const prom = new Promise((resolve, reject) => {
-            fetch("http://localhost:3000/users/signup", {
+            fetch("http://localhost:3002/users/signup/", {
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json",
@@ -69,7 +69,7 @@ class Users {
     redirect() {
         const token = localStorage.getItem("token");
         new Promise((resolve, reject) => {
-            fetch("http://localhost:3000/users/check", {
+            fetch("http://localhost:3002/users/check", {
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json",
@@ -80,12 +80,15 @@ class Users {
                 .then((res) => resolve(res.json()))
                 .catch((err) => reject(err));
         }).then((Data) => {
-            localStorage.setItem("Name", Data.Name);
+            localStorage.setItem("Name", Data.Role);
             if (Data.Role === "Admin") {
                 location.href = "../admin/index.html";
             }
-            else {
+            else if (Data.Role === "User") {
                 location.href = "../user/index.html";
+            }
+            else {
+                location.href = "../login/signup.html";
             }
         });
     }
@@ -96,18 +99,20 @@ login === null || login === void 0 ? void 0 : login.addEventListener("click", (e
     const Password = loginPassword.value;
     if (Email == "" || Password === "") {
         console.error("Please fill in all Fields");
+        return false;
     }
     else {
-        // console.log(Email + Password);
         Users.getUser().loginUser(Email, Password);
     }
 });
-signup === null || signup === void 0 ? void 0 : signup.addEventListener("click", () => {
+signup === null || signup === void 0 ? void 0 : signup.addEventListener("click", (e) => {
+    e.preventDefault();
     const Name = signupName.value;
     const Email = signupEmail.value;
     const Password = signupPassword.value;
     if (Name == "" || Email == "" || Password === "") {
         console.error("Please fill in all Fields");
+        return false;
     }
     else {
         Users.getUser().register(Name, Email, Password);

@@ -53,27 +53,39 @@ const userModal = document.querySelector(".user-modal") as HTMLDivElement;
       userModal.style.display = "none";
     });
   });
-  // div.appendChild(AssignBtn);
+  div.appendChild(AssignBtn);
   div.appendChild(DeleteBtn);
 
-  fetch("http://localhost:3000/projects/")
+  fetch("http://localhost:3002/projects/")
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
 
-      Project.innerHTML = `
-      <div >  
-      <div class="avatar" ><img src="../images/images.jpeg"><p>Amos Mwongela</p></div>
-      <hr>
-      <p class="tname" >${data.Name}</p>
-      <p>${data.Description}</p>
-      <p>Due before(<span class="date">${data.Due_date}</span>)</p>
-      </div>
-      `;
+      data.forEach((element: any) => {
+        console.log(element)
+        console.log(element.ProjectName,)
+          console.log(element.Description)
+          console.log( element.Due_date)
 
-      Project.appendChild(div);
-      ProjectContainer.appendChild(Project);
-      // ProjectContainer.insertAdjacentHTML("beforeend", rawproject);
+        const article= ` 
+        <div >  
+        <div class="avatar" ><img src="../images/images.jpeg"><p>Amos Mwongela</p></div>
+        <hr>
+        <p class="tname" >${element.ProjectName}</p>
+        <p>${element.Description}</p>
+        <p>Due before(<span class="date">${element.Due_date}</span>)</p>
+        </div>
+        `;
+        console.log(article)
+        // console.log(element)
+        // Project.innerHTML = article
+        // Project.insertAdjacentElement("beforeend", article)
+        Project.appendChild(div);
+        ProjectContainer.innerHTML  = Project;
+       
+      });
+
+      // ProjectContainer.insertAdjacentHTML("beforeend",Project);
       projError.style.display = "none";
     })
     .then(() => {
@@ -95,7 +107,7 @@ const userModal = document.querySelector(".user-modal") as HTMLDivElement;
     .then(() => {
       let completeProject = document.createElement("div");
 
-      fetch("http://localhost:3000/projects/completed")
+      fetch("http://localhost:3002/projects/completed")
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
@@ -128,7 +140,7 @@ const ClearInputs = () => {
 const AcceptData = (name: string, description: string, date: string) => {
   const prom = new Promise<{ error?: string; message?: string }>(
     (resolve, reject) => {
-      fetch("http://localhost:3000/projects/", {
+      fetch("http://localhost:3002/projects/", {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -162,7 +174,7 @@ const ValidateForm = () => {
   const Date = EndDate.value;
 
   if (Name === "" || Description == "" || Date === "") {
-    Message.innerHTML = `Fill all fields`;
+    Message.innerHTML = `Fill all the fields`;
     Message.style.color = "red";
 
     setTimeout(() => {

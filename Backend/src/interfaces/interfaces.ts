@@ -6,6 +6,7 @@ export interface ProjectExtendedRequest extends Request {
     Due_date: Date;
     Description: string;
     Status: string;
+    User: string
   };
 }
 export interface Extended extends Request {

@@ -1,1 +1,1 @@
-CREATE TABLE Projects (Id VARCHAR(100) , ProjectName VARCHAR(200) ,Due_date Date, Description VARCHAR(200), Status VARCHAR(100))
+CREATE TABLE Projects (ProjectId VARCHAR(100) ,UserId VARCHAR(100), ProjectName VARCHAR(200) ,Due_date Date, Description VARCHAR(200), Status VARCHAR(100),PRIMARY KEY(ProjectId), FOREIGN KEY(UserId) REFERENCES Users(UserId))

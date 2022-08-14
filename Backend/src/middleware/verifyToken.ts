@@ -20,8 +20,8 @@ export const VerifyToken = (
       return res.json({ message: "You are Not allowed to access this Route" });
     }
 
-    const data = jwt.verify(token, process.env.KEY as string) as Data;
-    req.info = data;
+    const Data = jwt.verify(token, process.env.KEY as string) as Data;
+    req.info = Data;
   } catch (Error) {
     return res.json({ Error });
   }

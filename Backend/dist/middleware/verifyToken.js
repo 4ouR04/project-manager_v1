@@ -13,8 +13,8 @@ const VerifyToken = (req, res, next) => {
         if (!token) {
             return res.json({ message: "You are Not allowed to access this Route" });
         }
-        const data = jsonwebtoken_1.default.verify(token, process.env.KEY);
-        req.info = data;
+        const Data = jsonwebtoken_1.default.verify(token, process.env.KEY);
+        req.info = Data;
     }
     catch (Error) {
         return res.json({ Error });

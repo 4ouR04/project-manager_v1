@@ -1,47 +1,51 @@
-
-
-# GET http://localhost:3000/projectmanager/dashboard
-# Content-Type: application/json
-
-POST  http://localhost:3000/signup/
+POST http://localhost:3000/signup
 Content-Type: application/json
 
 {
     "Name": "Amos Mwongela",
-    "Email":"amosmwongelah@gmail.com",
-    "Password":"Lethal12345"
+    "Email": "am@gmail.com",
+    "Password": "h5kjfhjhhjhfgvb",
+    "Role": "Admin",
+    "isAssigned": false
+}
+
+###
+POST http://localhost:3002/users/signup
+Content-Type: application/json
+
+{
+    "Name": "Amos Mwongela",
+    "Email": "amos@gmail.com",
+    "Password": "1to34567",
+    "Role": "Admin",
+    "isAssigned": false
 }
 
 
-# # Sign in User
+###
+POST http://localhost:3002/users/login/
+Content-Type: application/json
 
-# POST http://localhost:3000/users/signin/
-# Content-Type: application/json
+{
+    "Email": "amosmwongelah@gmail.com",
+    "Password": "Lethal 23"
+}
 
-# {
-#     "Email":"amosmwongelah@gmail.com",
-#     "Password": "Lethal12345"
-# }
+###
+GET http://localhost:3002/users/check
+Content-Type: application/json
 
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImU3MTlhYWM5LWE5NmEtNDYzZS05ZjBhLWE5NmMyY2NkNzUxZCIsIk5hbWUiOiJBbW9zIE13b25nZWxhIiwiRW1haWwiOiJhbW9zbXdvbmdlbGFoQGdtYWlsLmNvbSIsIlJvbGUiOiJBZG1pbiIsImlzQXNzaWduZWQiOjAsImlhdCI6MTY2MDQ2ODIzNiwiZXhwIjoxNjYwNDcxODM2fQ.YiET5jwEz4meIxlSujI1NYiHu86ohVi_WSN74wyLyqM"
+}
 
-# # Create new project
-# POST http://localhost:3000/projectmanager/projects
-# Content-Type: application/json
+###
+POST http://localhost:3002/projects/
+Content-Type: application/json
 
-# # See all projects
-# GET http://localhost:3000/projectmanager/projects
-# Content-Type: application/json
-
-# # See one specific project. Provide an Id
-# GET http://localhost:3000/projectmanager/projects/
-# Content-Type: application/json
-
-
-# # Update project status with project Id
-# PUT http://localhost:3000/projectmanager/projects/
-# Content-Type: application/json
-
-# Delete one specific project with the project Id
-
-# DELETE  http://localhost:3000/projectmanager/projects/
-# Content-Type: application/json
+{
+    "ProjectName": "Export CSv files IN Excell",
+    "Description": "On the Data tab, in the Get & Transform Data group, click From Text/CSV",
+    "Due_date": "2022/09/01",
+    "User": "Amos Mwongela"
+}
