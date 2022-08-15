@@ -97,11 +97,13 @@ const userModal = document.querySelector(".user-modal");
             .then((response) => response.json())
             .then((data) => {
             console.log(data);
-            completeProject.innerHTML = `
+            data.forEach((project) => {
+                completeProject.innerHTML = `
             <div class="complete-project">  
-                <p class="tname" >${data.Name}</p>
+                <p class="tname" >${project.ProjectName}</p>
             </div>
             `;
+            });
             completeContainer.appendChild(completeProject);
             // ProjectContainer.insertAdjacentHTML("beforeend", rawproject);
             errcomplete.remove();

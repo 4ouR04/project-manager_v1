@@ -124,6 +124,7 @@ const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getUsers = getUsers;
+// ************************************ASSIGN PROJECT***************************************************
 // ***********************************INSERT PRROJECT******************************************************
 const insertProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -178,13 +179,13 @@ const getProjects = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.getProjects = getProjects;
 const getCompletedProjects = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let completed = `SELECT * FROM Projects WHERE Status="Completed"`;
+        let completed = `SELECT ProjectName FROM Projects WHERE Status="Completed"`;
         let query = Config_1.db.query(completed, (err, data) => {
             if (err) {
                 return err;
             }
             else {
-                res.json({ data });
+                res.json(data);
             }
         });
     }

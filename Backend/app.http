@@ -43,8 +43,8 @@ POST http://localhost:3002/projects/
 Content-Type: application/json
 
 {
-    "ProjectName": "Excell",
-    "Description": "On the Data tab, in the Get & Transform Data group, click From Text/CSV",
+    "ProjectName": "Node",
+    "Description": "Develop a full stack web application",
     "Due_date": "2022/09/01"
     
 }
@@ -58,20 +58,25 @@ GET http://localhost:3002/projects/
 DELETE http://localhost:3002/projects/d3c9dc74-a400-4e1-8095-75977504549a
 
 ###
+###Update project
 PUT http://localhost:3002/projects/03b576bc-38ab-4906-b0e3-9215fb5de7b1
 Content-Type: application/json
 
 {
-    "ProjectName": "Nde",
+    "ProjectName": "Node",
     "Description": "On Data",
     "Due_date": "2023/12/14"
 }
 
 ###
 ###Complete project
-PUT http://localhost:3002/projects/03b576bc-38ab-4906-b0e3-9215fb5de7b1
+PUT http://localhost:3002/projects/complete/308a08cd-9ac3-4a60-8c0a-5cc4208d8deb
 Content-Type: application/json
 
 ###
 ###Get completed
 GET http://localhost:3002/projects/completed
+
+###
+###Get users without projects
+GET http://localhost:3002/users/all

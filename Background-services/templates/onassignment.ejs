@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Project</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+    }
+    main {
+        width: 50%;
+    }
+    main img {
+        width: 100%;
+        height: auto;
+    }
+    h3 {
+        text-align: center;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin: 1rem 0;
+    }
+    p{
+        margin: 0.4rem 0;
+        font-size: 1.2rem;
+        text-align: center;
+    }
+</style>
+<body>
+    <main>
+        <img src="https://media.institut-alternativa.org/2019/12/new-project-.jpg" alt="">
+        <h3>New project</h3>
+        <p>Dear <%=name%>,</p>
+        <p>A new project is now available <%=project%> which will be due on <%=date%>.Login to your intranet portal to complete</p>
+    </main>
+</body>
+</html>

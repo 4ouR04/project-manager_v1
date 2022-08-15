@@ -114,6 +114,7 @@ export const getUsers = async (req: Request, res: Response) => {
     res.json({error})
   }
 }
+// ************************************ASSIGN PROJECT***************************************************
 // ***********************************INSERT PRROJECT******************************************************
 export const insertProject = async (
   req: ProjectExtendedRequest,
@@ -169,12 +170,12 @@ export const getProjects = async (req: Request, res: Response) => {
 
 export const getCompletedProjects = async (req: Request, res: Response) => {
   try {
-    let completed = `SELECT * FROM Projects WHERE Status="Completed"`;
+    let completed = `SELECT ProjectName FROM Projects WHERE Status="Completed"`;
     let query = db.query(completed, (err, data) => {
       if (err) {
         return err;
       } else {
-        res.json({ data });
+        res.json(data);
       }
     });
   } catch (Error) {
