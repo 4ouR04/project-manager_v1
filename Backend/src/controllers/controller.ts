@@ -96,7 +96,7 @@ export const signin = async (req: Request, res: Response) => {
     }
   } catch (error) {}
 };
-// ***********************************PRROJECTS**********************
+// ***********************************INSERT PRROJECT******************************************************
 export const insertProject = async (
   req: ProjectExtendedRequest,
   res: Response
@@ -147,21 +147,20 @@ export const getProjects = async (req: Request, res: Response) => {
   }
 };
 
-// export const getCompletedProjects = async (req: Request, res: Response) => {
-//   // try {
-//   //   const pool = await mssql.connect(sqlConfig);
-//   //   const Projects = await pool.request().execute("getCompletedProjects");
-//   //   const { recordset } = Projects;
-//   //   res.json(recordset);
-//   // } catch (Error) {
-//   //   res.json({ Error });
-//   // }
-//   res.json({
-//     Name: "Python",
-//     Description: "Exporting csv files",
-//     Due_date: "12/09/2022",
-//   });
-// };
+export const getCompletedProjects = async (req: Request, res: Response) => {
+  try {
+    let completed = `SELECT * FROM Projects WHERE Status="Completed"`;
+    let query = db.query(completed, (err, data) => {
+      if (err) {
+        return err;
+      } else {
+        res.json({ data });
+      }
+    });
+  } catch (Error) {
+    res.json({ Error });
+  }
+};
 
 // export const getProject: RequestHandler<{ id: string }> = async (req, res) => {
 //   try {
@@ -182,66 +181,93 @@ export const getProjects = async (req: Request, res: Response) => {
 //   }
 // };
 
-// export const updateProject: RequestHandler<{ id: string }> = async (
-//   req,
-//   res
-// ) => {
-//   try {
-//     const Id = req.params.id;
-//     const pool = await mssql.connect(sqlConfig);
-//     const { ProjectName, Description, Due_date, Status } = req.body as {
-//       ProjectName: string;
-//       Due_date: string;
-//       Description: string;
-//       Status: string;
-//     };
-//     const Projects = await pool
-//       .request()
-//       .input("Id", mssql.VarChar, Id)
-//       .execute("getProject");
-//     if (!Projects.recordset[0]) {
-//       res.json({ message: `Project with id ${Id} cannot be found` });
-//     } else {
-//       await pool
-//         .request()
-//         .input("Id", mssql.VarChar, Id)
-//         .input("ProjectName", mssql.VarChar, ProjectName)
-//         .input("Due_date", mssql.Date, Due_date)
-//         .input("Description", mssql.VarChar, Description)
-//         .input("Status", mssql.VarChar, Status)
-//         .execute("updateProject");
-//       res.json({ message: `Project has been updated` });
-//     }
-//   } catch (Error: unknown) {
-//     res.json({ Error });
-//   }
-// };
+// ******************************************************************************
+// ********************UPDATE PROJECT********************************************
+export const updateProject: RequestHandler<{ id: string }> = async (
+  req,
+  res
+) => {
+  try {
+    const Id = req.params.id;
+    const { ProjectName, Description, Due_date, Status } = req.body as {
+      ProjectName: string;
+      Description: string;
+      Due_date: string;
+      Status: string;
+    };
+    let details = {
+      ProjectId: Id,
+      ProjectName: ProjectName,
+      Description: Description,
+      Due_date: Due_date,
+      Status: "Pending",
+    };
+    // let sql = "INSERT INTO Projects SET ?";
+    let updated = `UPDATE Projects SET ? WHERE ProjectId = "${Id}"`;
+    let query = db.query(updated, details, (err) => {
+      if (err) {
+        return res.json({ err: err.message });
+      }
 
-// export const deleteProject: RequestHandler<{ id: string }> = async (
-//   req,
-//   res
-// ) => {
-//   try {
-//     const Id = req.params.id;
-//     const pool = await mssql.connect(sqlConfig);
+      res.json({
+        Message: `Project has been updated successfully!!`,
+      });
+    });
+  } catch (Error: unknown) {
+    res.json({ Error });
+  }
+};
+// ***********************************************************************************************************
+// *******************COMPLETE PROJECT***************************************************************************
+export const completeProject: RequestHandler<{ id: string }> = async (
+  req,
+  res
+) => {
+  try {
+    const Id = req.params.id;
+    // const { ProjectName, Description, Due_date, Status } = req.body as {
+    //   ProjectName: string;
+    //   Description: string;
+    //   Due_date: string;
+    //   Status: string;
+    // };
+    let details = {
+      Status: "Completed",
+    };
+    let completed = `UPDATE Projects SET ? WHERE ProjectId = "${Id}"`;
+    let query = db.query(completed, details, (err) => {
+      if (err) {
+        return res.json({ err: err.message });
+      }
 
-//     const Projects = await pool
-//       .request()
-//       .input("Id", mssql.VarChar, Id)
-//       .execute("getProject");
-//     if (!Projects.recordset[0]) {
-//       res.json({ message: `Project with id ${Id} cannot be found` });
-//     } else {
-//       await pool
-//         .request()
-//         .input("Id", mssql.VarChar, Id)
-//         .execute("deleteProject");
-//       res.json({ message: `Project has been deleted` });
-//     }
-//   } catch (Error: unknown) {
-//     res.json({ Error });
-//   }
-// };
+      res.json({
+        Message: `Project has been completed!!!`,
+      });
+    });
+  } catch (Error: unknown) {
+    res.json({ Error });
+  }
+};
+// *************************************************************************************************************
+// *******************DELETE PROJECT*****************************************************************************
+export const deleteProject: RequestHandler<{ id: string }> = async (
+  req,
+  res
+) => {
+  try {
+    const Id = req.params.id;
+    let sql = `DELETE FROM Projects WHERE ProjectId="${Id}"`;
+    db.query(sql, (err, data) => {
+      if (err) {
+        return err;
+      } else {
+        res.json({ data });
+      }
+    });
+  } catch (Error: unknown) {
+    res.json({ Error });
+  }
+};
 
 export const checkUser = async (req: Extended, res: Response) => {
   if (req.info) {
@@ -250,3 +276,4 @@ export const checkUser = async (req: Extended, res: Response) => {
     res.json({ Error });
   }
 };
+// ***************************************************************************

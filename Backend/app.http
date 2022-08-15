@@ -38,6 +38,7 @@ Content-Type: application/json
 }
 
 ###
+###Create project
 POST http://localhost:3002/projects/
 Content-Type: application/json
 
@@ -49,4 +50,28 @@ Content-Type: application/json
 }
 
 ###
+###Get all projects
 GET http://localhost:3002/projects/
+
+###
+###Delete specific project
+DELETE http://localhost:3002/projects/d3c9dc74-a400-4e1-8095-75977504549a
+
+###
+PUT http://localhost:3002/projects/03b576bc-38ab-4906-b0e3-9215fb5de7b1
+Content-Type: application/json
+
+{
+    "ProjectName": "Nde",
+    "Description": "On Data",
+    "Due_date": "2023/12/14"
+}
+
+###
+###Complete project
+PUT http://localhost:3002/projects/03b576bc-38ab-4906-b0e3-9215fb5de7b1
+Content-Type: application/json
+
+###
+###Get completed
+GET http://localhost:3002/projects/completed

@@ -32,12 +32,12 @@ body {
   margin: 3rem 1rem;
 }
 .project {
-  display: grid;
-  grid-template-columns: 9fr 1fr;
+  /* display: grid;
+  grid-template-columns: 9fr 1fr; */
   margin: 0 2rem 0rem 1rem;
   padding: 1rem 1rem 1rem 1.5rem;
   /* background-color: lightgrey; */
-  height: 12rem;
+  height: 14rem;
   border: 1px solid lightgrey;
   /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
   /* overflow: scroll; */
@@ -45,7 +45,7 @@ body {
 .errproject {
   margin: 0 2rem 0rem 1rem;
   /* padding: 1rem 1rem 1rem 1.5rem; */
-  height: 34.5rem;
+  height: 31.7rem;
   border: 1px solid lightgrey;
   text-align: center;
 }
@@ -57,7 +57,7 @@ body {
 }
 .errproject p {
   font-size: 1.2rem;
-  transform: translateY(-300%);
+  transform: translateY(-180%);
 }
 .projects-head {
   margin: 0 2rem 0rem 1rem;
@@ -86,15 +86,21 @@ img {
 }
 .assign-btn {
   width: 5rem;
-  height: 1.5rem;
+  height: 1.8rem;
+  margin: 1rem 0rem;
   /* padding-right: 0 !important ; */
 }
 .delete-btn {
   width: 5rem;
-  height: 1.5rem;
-  margin: 2rem 0rem;
+  height: 1.8rem;
+  margin: 1rem 0rem;
   /* background-color: red;
   color: white; */
+}
+.update-btn{
+  width: 5rem;
+  height: 1.8rem;
+  margin: 1rem 0rem;
 }
 /* .description {
   padding: 0 1rem;
@@ -136,16 +142,26 @@ select{
 
 }
 .avatar {
-  display: grid;
+  display: flex;
   /* grid-template-columns: auto auto; */
+  align-items: center;
   padding-bottom: 0.8rem;
 }
 .avatar img {
   width: 2.3rem;
   height: 2.3rem;
+  margin-right: 1.5rem;
 }
 hr {
-  width: 37rem;
+  /* height: 0.1rem; */
+  opacity: 0.2;
+  width: 100%;
+  color: grey;
+}
+.btns{
+  display: grid;
+  grid-template-columns: auto auto auto;
+  justify-content: space-between;
 }
 .complete-projects-head {
   margin: 3rem 1rem 0rem 1rem;

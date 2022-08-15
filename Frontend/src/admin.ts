@@ -41,14 +41,19 @@ const userModal = document.querySelector(".user-modal") as HTMLDivElement;
   let Project = document.createElement("div");
   Project.className = "project";
   let div = document.createElement("div");
+  div.className="btns"
   let AssignBtn = document.createElement("button");
+  let UpdateBtn = document.createElement("button")
   let DeleteBtn = document.createElement("button");
   DeleteBtn.className = "delete-btn";
   DeleteBtn.innerText = "Delete";
+  UpdateBtn.className = "update-btn"
+  UpdateBtn.innerText = "Update"
   AssignBtn.className = "assign-btn";
   AssignBtn.innerText = "Assign To";
   
   div.appendChild(AssignBtn);
+  div.appendChild(UpdateBtn)
   div.appendChild(DeleteBtn);
 
   fetch("http://localhost:3002/projects/")
@@ -56,8 +61,10 @@ const userModal = document.querySelector(".user-modal") as HTMLDivElement;
     .then((data) => {
 
       for (const element of data) {
+        let id = element.ProjectId;
+        console.log(id)
         const article = ` 
-        <div >  
+        <div id= ${id} >  
         <div class="avatar" ><img src="../images/images.jpeg"><p>Amos Mwongela</p></div>
         <hr>
         <p class="tname" >${element.ProjectName}</p>
@@ -81,26 +88,41 @@ const userModal = document.querySelector(".user-modal") as HTMLDivElement;
         assignbtn.forEach(btn => {
           btn.addEventListener("click", () => {
              userModal.style.display = "flex";
-            //  alert("Hi");
              userModal.addEventListener("click", () => {
-               userModal.style.display = "none";
+               userModal.remove();
              });
            });
         
         });
        
-        console.log(assignbtn);
-        if (ProjectContainer.children.length == 0) {
-          ProjectHead.innerHTML = `
-        <div><p>No Projects To Display</p></div>
-        <div><img src="../images/noprojects.png"/><div>
-    `;
-        } else {
-          ProjectHead.innerHTML = `
-        <div><p>Current Projects</p></div>
-        <div><img src="../images/projects.png"/><div>
-    `;
+
+// *****************delete*************
+        const delbtn = document.querySelectorAll(".delete-btn")
+        delbtn.forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            let id:any = btn.parentElement?.parentElement?.firstElementChild?.id
+            
+           
+
+            deleteproject(id)
+          })
+        })
+        const deleteproject = (id: string) => { 
+          fetch("http://localhost:3002/projects/"+id, {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            method: "DELETE"            
+          }).then((res) => {
+           res.json();
+          }).then((data) => {
+            return data
+          })
         }
+        
+// *********************************
+        
       })();
     })
 
@@ -122,8 +144,8 @@ const userModal = document.querySelector(".user-modal") as HTMLDivElement;
           // ProjectContainer.insertAdjacentHTML("beforeend", rawproject);
           errcomplete.remove();
         });
-    });
-})();
+    })
+})()
 // ***************************************************************************************
 
 //--------------------------Functions--------------------------------------------
