@@ -34,8 +34,8 @@ export const signup = async (req: Request, res: Response) => {
         Name: Name,
         Email: Email,
         Password: hashedpassword,
-        Role: Role,
-        isAssigned: isAssigned,
+        Role: "User",
+        isAssigned: false,
       };
 
       let sql = "INSERT INTO Users SET ?";
@@ -108,32 +108,22 @@ export const insertProject = async (
     if (error) {
       return res.json({ error: error.details[0].message });
     } else {
-      let userquery = `SELECT * FROM Users WHERE Name="${User}"`;
-      let data = db.query(userquery, (err, Data) => {
+      let details = {
+        ProjectId: Id,
+        ProjectName: ProjectName,
+        Description: Description,
+        Due_date: Due_date,
+        Status: "Pending",
+      };
+      let sql = "INSERT INTO Projects SET ?";
+      let query = db.query(sql, details, (err) => {
         if (err) {
           return res.json({ err: err.message });
-        } else {
-          let UserId: string = Data[0].UserId;
-          // res.json({Data: Data[0].UserId });
-          let details = {
-            ProjectId: Id,
-            UserId: UserId,
-            ProjectName: ProjectName,
-            Description: Description,
-            Due_date: Due_date,
-            Status: "Pending",
-          };
-          let sql = "INSERT INTO Projects SET ?";
-          let query = db.query(sql, details, (err) => {
-            if (err) {
-              return res.json({ err: err.message });
-            }
-
-            res.json({
-              Message: `Project has been created successfully!!`,
-            });
-          });
         }
+
+        res.json({
+          Message: `Project has been created successfully!!`,
+        });
       });
     }
   } catch (Error) {

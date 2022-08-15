@@ -47,27 +47,16 @@ const userModal = document.querySelector(".user-modal") as HTMLDivElement;
   DeleteBtn.innerText = "Delete";
   AssignBtn.className = "assign-btn";
   AssignBtn.innerText = "Assign To";
-  AssignBtn.addEventListener("click", () => {
-    userModal.style.display = "flex";
-    userModal.addEventListener("click", () => {
-      userModal.style.display = "none";
-    });
-  });
+  
   div.appendChild(AssignBtn);
   div.appendChild(DeleteBtn);
 
   fetch("http://localhost:3002/projects/")
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
 
-      data.forEach((element: any) => {
-        console.log(element)
-        console.log(element.ProjectName,)
-          console.log(element.Description)
-          console.log( element.Due_date)
-
-        const article= ` 
+      for (const element of data) {
+        const article = ` 
         <div >  
         <div class="avatar" ><img src="../images/images.jpeg"><p>Amos Mwongela</p></div>
         <hr>
@@ -76,20 +65,31 @@ const userModal = document.querySelector(".user-modal") as HTMLDivElement;
         <p>Due before(<span class="date">${element.Due_date}</span>)</p>
         </div>
         `;
-        console.log(article)
-        // console.log(element)
-        // Project.innerHTML = article
-        // Project.insertAdjacentElement("beforeend", article)
-        Project.appendChild(div);
-        ProjectContainer.innerHTML  = Project;
-       
-      });
 
-      // ProjectContainer.insertAdjacentHTML("beforeend",Project);
-      projError.style.display = "none";
+        Project.innerHTML = article;
+        Project.appendChild(div);
+        projError.style.display = "none";
+        ProjectContainer.innerHTML += Project.outerHTML;
+        
+      }
     })
     .then(() => {
       (() => {
+        let assignbtn = document.querySelectorAll(
+          ".assign-btn"
+        );
+        assignbtn.forEach(btn => {
+          btn.addEventListener("click", () => {
+             userModal.style.display = "flex";
+            //  alert("Hi");
+             userModal.addEventListener("click", () => {
+               userModal.style.display = "none";
+             });
+           });
+        
+        });
+       
+        console.log(assignbtn);
         if (ProjectContainer.children.length == 0) {
           ProjectHead.innerHTML = `
         <div><p>No Projects To Display</p></div>
@@ -147,9 +147,9 @@ const AcceptData = (name: string, description: string, date: string) => {
         },
         method: "POST",
         body: JSON.stringify({
-          Name: name,
+          ProjectName: name,
           Description: description,
-          Date: date,
+          Due_date: date,
         }),
       })
         .then((res) => {
@@ -164,6 +164,7 @@ const AcceptData = (name: string, description: string, date: string) => {
   prom.then((data) => console.log(data)).catch((err) => console.log(err));
 
   ClearInputs();
+  // window.location.reload()
 };
 
 // Validate Form

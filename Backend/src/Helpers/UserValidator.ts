@@ -19,5 +19,5 @@ export const projectSchema = Joi.object({
   Description: Joi.string().required(),
   Due_date: Joi.date(),
   Status: Joi.string(),
-  User: Joi.string().required()
+  User: Joi.string()
 })

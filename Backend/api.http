@@ -2,10 +2,9 @@ POST http://localhost:3000/signup
 Content-Type: application/json
 
 {
-    "Name": "Amos Mwongela",
-    "Email": "am@gmail.com",
-    "Password": "h5kjfhjhhjhfgvb",
-    "Role": "Admin",
+    "Name": "Am Amos",
+    "Email": "amamos@gmail.com",
+    "Password": "hb",
     "isAssigned": false
 }
 
@@ -17,7 +16,6 @@ Content-Type: application/json
     "Name": "Amos Mwongela",
     "Email": "amos@gmail.com",
     "Password": "1to34567",
-    "Role": "Admin",
     "isAssigned": false
 }
 
@@ -27,8 +25,8 @@ POST http://localhost:3002/users/login/
 Content-Type: application/json
 
 {
-    "Email": "amosmwongelah@gmail.com",
-    "Password": "Lethal 23"
+    "Email": "amos@gmail.com",
+    "Password": "1to34567"
 }
 
 ###
@@ -44,8 +42,11 @@ POST http://localhost:3002/projects/
 Content-Type: application/json
 
 {
-    "ProjectName": "Export CSv files IN Excell",
+    "ProjectName": "Excell",
     "Description": "On the Data tab, in the Get & Transform Data group, click From Text/CSV",
-    "Due_date": "2022/09/01",
-    "User": "Amos Mwongela"
+    "Due_date": "2022/09/01"
+    
 }
+
+###
+GET http://localhost:3002/projects/

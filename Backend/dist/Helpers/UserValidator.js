@@ -21,5 +21,5 @@ exports.projectSchema = joi_1.default.object({
     Description: joi_1.default.string().required(),
     Due_date: joi_1.default.date(),
     Status: joi_1.default.string(),
-    User: joi_1.default.string().required()
+    User: joi_1.default.string()
 });

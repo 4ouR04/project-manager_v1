@@ -44,8 +44,8 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 Name: Name,
                 Email: Email,
                 Password: hashedpassword,
-                Role: Role,
-                isAssigned: isAssigned,
+                Role: "User",
+                isAssigned: false,
             };
             let sql = "INSERT INTO Users SET ?";
             let query = Config_1.db.query(sql, details, (err) => {
@@ -114,32 +114,21 @@ const insertProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             return res.json({ error: error.details[0].message });
         }
         else {
-            let userquery = `SELECT * FROM Users WHERE Name="${User}"`;
-            let data = Config_1.db.query(userquery, (err, Data) => {
+            let details = {
+                ProjectId: Id,
+                ProjectName: ProjectName,
+                Description: Description,
+                Due_date: Due_date,
+                Status: "Pending",
+            };
+            let sql = "INSERT INTO Projects SET ?";
+            let query = Config_1.db.query(sql, details, (err) => {
                 if (err) {
                     return res.json({ err: err.message });
                 }
-                else {
-                    let UserId = Data[0].UserId;
-                    // res.json({Data: Data[0].UserId });
-                    let details = {
-                        ProjectId: Id,
-                        UserId: UserId,
-                        ProjectName: ProjectName,
-                        Description: Description,
-                        Due_date: Due_date,
-                        Status: "Pending",
-                    };
-                    let sql = "INSERT INTO Projects SET ?";
-                    let query = Config_1.db.query(sql, details, (err) => {
-                        if (err) {
-                            return res.json({ err: err.message });
-                        }
-                        res.json({
-                            Message: `Project has been created successfully!!`,
-                        });
-                    });
-                }
+                res.json({
+                    Message: `Project has been created successfully!!`,
+                });
             });
         }
     }
