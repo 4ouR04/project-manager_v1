@@ -23,12 +23,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkUser = exports.deleteProject = exports.completeProject = exports.updateProject = exports.getProject = exports.getCompletedProjects = exports.getProjects = exports.insertProject = exports.signin = exports.signup = void 0;
+exports.checkUser = exports.deleteProject = exports.completeProject = exports.updateProject = exports.getProject = exports.getCompletedProjects = exports.getProjects = exports.insertProject = exports.getUsers = exports.signin = exports.signup = void 0;
 const uuid_1 = require("uuid");
 const Config_1 = require("../config/Config");
 const UserValidator_1 = require("../Helpers/UserValidator");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+// *************************CREATE ACCOUNT**********************************************
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = (0, uuid_1.v4)();
@@ -61,6 +62,7 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.signup = signup;
+// **************************LOGIN **********************************************
 const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { Email, Password } = req.body;
@@ -104,6 +106,24 @@ const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     catch (error) { }
 });
 exports.signin = signin;
+// *************************************GET USER************************************************************
+const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let user = `SELECT Name FROM Users WHERE isAssigned= false`;
+        let query = Config_1.db.query(user, (error, users) => {
+            if (error) {
+                res.json({ error });
+            }
+            else {
+                res.json({ Users: users });
+            }
+        });
+    }
+    catch (error) {
+        res.json({ error });
+    }
+});
+exports.getUsers = getUsers;
 // ***********************************INSERT PRROJECT******************************************************
 const insertProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -137,6 +157,9 @@ const insertProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.insertProject = insertProject;
+// **************************GET ONE PROJECT*************************************
+// 
+// 
 const getProjects = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let allprojects = "SELECT * FROM Projects";

@@ -1,14 +1,15 @@
 import { Router } from "express";
 import { verify } from "jsonwebtoken";
 import {
+  signin,
+  signup,
+  getUsers,
   deleteProject,
   getProject,
   getCompletedProjects,
   getProjects,
   insertProject,
   updateProject,
-  signin,
-  signup,
   checkUser,
   completeProject
 } from "../controllers/controller";
@@ -17,9 +18,10 @@ import { VerifyToken } from "../middleware/verifyToken";
 const router = Router();
 
 
+router.get("/all",getUsers)
 router.post("/login", signin);
 router.post("/signup", signup);
-router.get("/check",VerifyToken,checkUser);
+router.get("/check", VerifyToken, checkUser);
 
 router.get("/", getProjects);
 router.get("/completed", getCompletedProjects);

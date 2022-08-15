@@ -19,7 +19,7 @@ import {
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { array } from "joi";
-
+// *************************CREATE ACCOUNT**********************************************
 export const signup = async (req: Request, res: Response) => {
   try {
     const Id = uid();
@@ -55,7 +55,7 @@ export const signup = async (req: Request, res: Response) => {
     return res.json({ error });
   }
 };
-
+// **************************LOGIN **********************************************
 export const signin = async (req: Request, res: Response) => {
   try {
     const { Email, Password } = req.body;
@@ -99,6 +99,21 @@ export const signin = async (req: Request, res: Response) => {
     }
   } catch (error) {}
 };
+// *************************************GET USER************************************************************
+export const getUsers = async (req: Request, res: Response) => {
+  try {
+    let user = `SELECT Name FROM Users WHERE isAssigned= false`
+    let query = db.query(user, (error, users) => {
+      if (error) {
+        res.json({error})
+      }else{
+        res.json({Users: users})
+      }
+    })
+  } catch (error) {
+    res.json({error})
+  }
+}
 // ***********************************INSERT PRROJECT******************************************************
 export const insertProject = async (
   req: ProjectExtendedRequest,
@@ -133,7 +148,9 @@ export const insertProject = async (
     res.json({ Error });
   }
 };
-
+// **************************GET ONE PROJECT*************************************
+// 
+// 
 export const getProjects = async (req: Request, res: Response) => {
   try {
     let allprojects = "SELECT * FROM Projects";
