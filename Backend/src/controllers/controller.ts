@@ -1,3 +1,6 @@
+// Author: Amos Mwongela
+// Email: amosmwongelah@gmail.com
+// Acknowledgements: TheJitu.com
 import { Request, RequestHandler, Response } from "express";
 import {
   Extended,
@@ -161,28 +164,29 @@ export const getCompletedProjects = async (req: Request, res: Response) => {
     res.json({ Error });
   }
 };
+// **************************************************************************************
+// *********************************GET ONE PROJECT*************************************
+// *******************USER SEE'S HIS / HER PROJECT ONCE LOGGED  IN*****************
+export const getProject: RequestHandler<{ id: string }> = async (req, res) => {
+  try {
+    const Id = req.params.id;
 
-// export const getProject: RequestHandler<{ id: string }> = async (req, res) => {
-//   try {
-//     const Id = req.params.id;
-//     const pool = await mssql.connect(sqlConfig);
-//     const Projects = await pool
-//       .request()
-//       .input("id", mssql.VarChar, Id)
-//       .execute("getProject");
-//     const { recordset } = Projects;
-//     if (!Projects.recordset[0]) {
-//       res.json({ message: `Project with id ${Id} cannot be found` });
-//     } else {
-//       res.json(recordset);
-//     }
-//   } catch (Error) {
-//     res.json({ Error });
-//   }
-// };
+    let project = `SELECT * FROM Projects WHERE UserId="${Id}"`;
+    let query = db.query(project, (err, data) => {
+      if (err) {
+        res.json({ err });
+      } else {
+        res.json({ Message: "Here is your project" });
+      }
+    });
+  } catch (Error) {
+    res.json({ Error });
+  }
+};
 
 // ******************************************************************************
-// ********************UPDATE PROJECT********************************************
+// ****************************UPDATE PROJECT********************************************
+// **********************ADMIN CHANGES PROJECT DETAILS***************************
 export const updateProject: RequestHandler<{ id: string }> = async (
   req,
   res
@@ -202,7 +206,6 @@ export const updateProject: RequestHandler<{ id: string }> = async (
       Due_date: Due_date,
       Status: "Pending",
     };
-    // let sql = "INSERT INTO Projects SET ?";
     let updated = `UPDATE Projects SET ? WHERE ProjectId = "${Id}"`;
     let query = db.query(updated, details, (err) => {
       if (err) {
@@ -218,19 +221,14 @@ export const updateProject: RequestHandler<{ id: string }> = async (
   }
 };
 // ***********************************************************************************************************
-// *******************COMPLETE PROJECT***************************************************************************
+// *****************************COMPLETE PROJECT***************************************************************************
+// *************************USER COMPLETES PROJECT************************************
 export const completeProject: RequestHandler<{ id: string }> = async (
   req,
   res
 ) => {
   try {
     const Id = req.params.id;
-    // const { ProjectName, Description, Due_date, Status } = req.body as {
-    //   ProjectName: string;
-    //   Description: string;
-    //   Due_date: string;
-    //   Status: string;
-    // };
     let details = {
       Status: "Completed",
     };
@@ -249,7 +247,8 @@ export const completeProject: RequestHandler<{ id: string }> = async (
   }
 };
 // *************************************************************************************************************
-// *******************DELETE PROJECT*****************************************************************************
+// **************************DELETE PROJECT*************************************
+// **********************ADMIN DELETES PROJECT*************************************
 export const deleteProject: RequestHandler<{ id: string }> = async (
   req,
   res
@@ -276,4 +275,4 @@ export const checkUser = async (req: Extended, res: Response) => {
     res.json({ Error });
   }
 };
-// ***************************************************************************
+// ****************************END***********************************************

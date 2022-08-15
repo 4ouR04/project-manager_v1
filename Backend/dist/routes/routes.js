@@ -9,7 +9,7 @@ router.post("/signup", controller_1.signup);
 router.get("/check", verifyToken_1.VerifyToken, controller_1.checkUser);
 router.get("/", controller_1.getProjects);
 router.get("/completed", controller_1.getCompletedProjects);
-// router.get("/:id", VerifyToken, getProject);
+router.get("/:id", controller_1.getProject);
 router.put("/complete/:id", controller_1.completeProject);
 router.post("/", controller_1.insertProject);
 router.put("/:id", controller_1.updateProject);

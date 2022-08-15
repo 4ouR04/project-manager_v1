@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkUser = exports.deleteProject = exports.completeProject = exports.updateProject = exports.getCompletedProjects = exports.getProjects = exports.insertProject = exports.signin = exports.signup = void 0;
+exports.checkUser = exports.deleteProject = exports.completeProject = exports.updateProject = exports.getProject = exports.getCompletedProjects = exports.getProjects = exports.insertProject = exports.signin = exports.signup = void 0;
 const uuid_1 = require("uuid");
 const Config_1 = require("../config/Config");
 const UserValidator_1 = require("../Helpers/UserValidator");
@@ -170,26 +170,30 @@ const getCompletedProjects = (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.getCompletedProjects = getCompletedProjects;
-// export const getProject: RequestHandler<{ id: string }> = async (req, res) => {
-//   try {
-//     const Id = req.params.id;
-//     const pool = await mssql.connect(sqlConfig);
-//     const Projects = await pool
-//       .request()
-//       .input("id", mssql.VarChar, Id)
-//       .execute("getProject");
-//     const { recordset } = Projects;
-//     if (!Projects.recordset[0]) {
-//       res.json({ message: `Project with id ${Id} cannot be found` });
-//     } else {
-//       res.json(recordset);
-//     }
-//   } catch (Error) {
-//     res.json({ Error });
-//   }
-// };
+// **************************************************************************************
+// *********************************GET ONE PROJECT*************************************
+// *******************USER SEE'S HIS / HER PROJECT ONCE LOGGED  IN*****************
+const getProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const Id = req.params.id;
+        let project = `SELECT * FROM Projects WHERE UserId="${Id}"`;
+        let query = Config_1.db.query(project, (err, data) => {
+            if (err) {
+                res.json({ err });
+            }
+            else {
+                res.json({ Message: "Here is your project" });
+            }
+        });
+    }
+    catch (Error) {
+        res.json({ Error });
+    }
+});
+exports.getProject = getProject;
 // ******************************************************************************
-// ********************UPDATE PROJECT********************************************
+// ****************************UPDATE PROJECT********************************************
+// **********************ADMIN CHANGES PROJECT DETAILS***************************
 const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = req.params.id;
@@ -201,7 +205,6 @@ const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             Due_date: Due_date,
             Status: "Pending",
         };
-        // let sql = "INSERT INTO Projects SET ?";
         let updated = `UPDATE Projects SET ? WHERE ProjectId = "${Id}"`;
         let query = Config_1.db.query(updated, details, (err) => {
             if (err) {
@@ -218,16 +221,11 @@ const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.updateProject = updateProject;
 // ***********************************************************************************************************
-// *******************COMPLETE PROJECT***************************************************************************
+// *****************************COMPLETE PROJECT***************************************************************************
+// *************************USER COMPLETES PROJECT************************************
 const completeProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = req.params.id;
-        // const { ProjectName, Description, Due_date, Status } = req.body as {
-        //   ProjectName: string;
-        //   Description: string;
-        //   Due_date: string;
-        //   Status: string;
-        // };
         let details = {
             Status: "Completed",
         };
@@ -247,7 +245,8 @@ const completeProject = (req, res) => __awaiter(void 0, void 0, void 0, function
 });
 exports.completeProject = completeProject;
 // *************************************************************************************************************
-// *******************DELETE PROJECT*****************************************************************************
+// **************************DELETE PROJECT*************************************
+// **********************ADMIN DELETES PROJECT*************************************
 const deleteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Id = req.params.id;
@@ -275,4 +274,4 @@ const checkUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.checkUser = checkUser;
-// ***************************************************************************
+// ****************************END***********************************************
