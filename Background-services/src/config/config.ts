@@ -1,3 +1,7 @@
+// Author: Amos Mwongela
+// Email: amosmwongelah@gmail.com
+// File: config.ts
+// Acknowledgements: The
 import dotenv from "dotenv";
 dotenv.config();
 

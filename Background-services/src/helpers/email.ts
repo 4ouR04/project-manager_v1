@@ -1,3 +1,7 @@
+// Author: Amos Mwongela
+// Email: amosmwongelah@gmail.com
+// File: email.ts
+// Acknowledgements: TheJitu
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import { configOptions } from "../config/config";

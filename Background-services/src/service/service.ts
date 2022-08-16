@@ -1,9 +1,13 @@
+// Author: Amos Mwongela
+// Email: amosmwongelah@gmail.com
+// File: service.ts
+// Acknowledgements: The
 import ejs from "ejs";
 import dotenv from "dotenv";
 dotenv.config();
 import sendMail from "../helpers/email";
 
-export const SendEmailOnRegister = async (name: string, email: string) => {
+export const onSignUp = async (name: string, email: string) => {
   ejs.renderFile(
     "templates/onsignups.ejs",
     { name },
@@ -26,7 +30,7 @@ export const SendEmailOnRegister = async (name: string, email: string) => {
   );
 };
 
-export const SendEmailOnAssign = async (
+export const onNewProject = async (
   email: string,
   name: string,
   project: string,
@@ -54,7 +58,7 @@ export const SendEmailOnAssign = async (
   );
 };
 
-export const SendEmailOnComplete = async (
+export const onCompletion = async (
   email: string,
   name: string,
   project: string,

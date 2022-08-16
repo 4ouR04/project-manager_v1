@@ -1,14 +1,11 @@
-// Author: Amos Mwongela 
+// Author: Amos Mwongela
+// Email: amosmwongelah@gmail.com
 // File: server.ts
-// Acknowledgements: TheJitu
+// Acknowledgements: The
 import express, { NextFunction, Request, Response, json } from "express";
 import dotenv from "dotenv";
 dotenv.config();
-import {
-  SendEmailOnAssign,
-  SendEmailOnComplete,
-  SendEmailOnRegister,
-} from "./service/service";
+import { onNewProject, onCompletion, onSignUp } from "./service/service";
 
 const app = express();
 
@@ -18,7 +15,7 @@ app.use(json());
 app.post("/signup", async (req: Request, res: Response) => {
   const { name, email } = req.body;
 
-  await SendEmailOnRegister(name, email);
+  await onSignUp(name, email);
   res.status(200).json("Email sent");
 });
 
@@ -26,7 +23,7 @@ app.post("/signup", async (req: Request, res: Response) => {
 app.post("/newproject", async (req: Request, res: Response) => {
   const { email, name, project, date } = req.body;
 
-  await SendEmailOnAssign(email, name, project, date);
+  await onNewProject(email, name, project, date);
   res.status(200).json("Email sent");
 });
 
@@ -34,10 +31,9 @@ app.post("/newproject", async (req: Request, res: Response) => {
 app.post("/complete", async (req: Request, res: Response) => {
   const { name, email, date, project } = req.body;
 
-  await SendEmailOnComplete(email, name, project, date);
+  await onCompletion(email, name, project, date);
   res.status(200).json("Email sent");
 });
-
 
 const port: number | string = process.env.PORT || 3000;
 app.listen(port, () => {
