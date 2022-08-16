@@ -1,7 +1,7 @@
 // Author: Amos Mwongela
 // Email: amosmwongelah@gmail.com
 // File: config.ts
-// Acknowledgements: The
+// Acknowledgements: TheJitu
 import dotenv from "dotenv";
 dotenv.config();
 

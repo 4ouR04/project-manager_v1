@@ -1,7 +1,7 @@
 // Author: Amos Mwongela
 // Email: amosmwongelah@gmail.com
 // File: server.ts
-// Acknowledgements: The
+// Acknowledgements: TheJitu
 import express, { NextFunction, Request, Response, json } from "express";
 import dotenv from "dotenv";
 dotenv.config();
