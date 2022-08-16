@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
-import { configOptions } from "../Config/Config";
+import { configOptions } from "../config/config";
 dotenv.config();
 
 function createTransporter(config: any) {

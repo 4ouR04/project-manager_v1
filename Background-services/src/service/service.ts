@@ -1,18 +1,18 @@
 import ejs from "ejs";
 import dotenv from "dotenv";
 dotenv.config();
-import sendMail from "../Helpers/Email";
+import sendMail from "../helpers/email";
 
 export const SendEmailOnRegister = async (name: string, email: string) => {
   ejs.renderFile(
-    "templates/registration.ejs",
+    "templates/onsignups.ejs",
     { name },
 
     async (error, data) => {
       let messageOption = {
         from: process.env.EMAIL,
         to: email,
-        subject: "Welcome To Mash Software",
+        subject: "Thank you for signing up!!!",
         html: data,
       };
 
@@ -33,20 +33,20 @@ export const SendEmailOnAssign = async (
   date: string
 ) => {
   ejs.renderFile(
-    "templates/assignment.ejs",
+    "templates/onassignment.ejs",
     { name, project, date },
 
     async (error, data) => {
       let messageOption = {
         from: process.env.EMAIL,
         to: email,
-        subject: "Mash Project Assignment",
+        subject: "A new project is available.Check your portal",
         html: data,
       };
 
       try {
         await sendMail(messageOption);
-        console.log("Email is Sent");
+        console.log("Email sent");
       } catch (error) {
         console.log(error);
       }
