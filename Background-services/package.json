@@ -1,0 +1,20 @@
+{
+  "name": "background-services",
+  "version": "1.0.0",
+  "description": "Send template emails to registered clients",
+  "main": "server.ts",
+  "scripts": {
+    "start:build": "tsc -w",
+    "start:run": "nodemon ./dist/server.js",
+    "start": "concurrently npm:start:*"
+  },
+  "author": "Amos Mwongela",
+  "license": "MIT",
+  "dependencies": {
+    "@types/ejs": "^3.1.1",
+    "@types/express": "^4.17.13",
+    "@types/nodemailer": "^6.4.5",
+    "concurrently": "^7.3.0",
+    "nodemon": "^2.0.19"
+  }
+}
